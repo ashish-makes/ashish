@@ -112,7 +112,7 @@ export default function CaseStudyForm({ initialData, mode }: CaseStudyFormProps)
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 placeholder="Describe the problem, solution, and results..."
-                                className="min-h-[300px] bg-slate-800 border-slate-700 font-sans"
+                                className="min-h-[300px] bg-slate-800 border-slate-700 font-bricolage"
                             />
                         </div>
 

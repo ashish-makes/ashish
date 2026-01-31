@@ -106,7 +106,7 @@ export default function BlogForm({ initialData, mode }: BlogFormProps) {
                                 value={formData.content}
                                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                 placeholder="Start writing your amazing thoughts..."
-                                className="min-h-[400px] bg-slate-800 border-slate-700 font-mono"
+                                className="min-h-[400px] bg-slate-800 border-slate-700 font-bricolage"
                             />
                         </div>
 

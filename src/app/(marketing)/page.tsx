@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useVelocity, useSpring, useAnimationFrame, useMotionValue, wrap } from 'framer-motion';
 import { TextAnimate } from '@/components/ui/text-animate';
 import Magnetic from '@/components/animations/Magnetic';
+import Footer from '@/components/main/Footer';
 
 const WorkCard = ({ index }: { index: number }) => {
   return (
@@ -69,65 +70,11 @@ const HorizontalWork = () => {
           ))}
         </motion.div>
       </div>
-    </section>
+    </section >
   );
 };
 
-const MarqueeRow = ({ items, baseVelocity = 0.5 }: { items: { name: string, cat: string }[], baseVelocity?: number }) => {
-  const baseX = useMotionValue(0);
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400
-  });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 2], {
-    clamp: false
-  });
 
-  const x = useTransform(baseX, (v) => `${wrap(-20, -45, v)}%`);
-
-  const directionFactor = useRef<number>(1);
-  useAnimationFrame((t, delta) => {
-    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
-
-    if (velocityFactor.get() < 0) {
-      directionFactor.current = -1;
-    } else if (velocityFactor.get() > 0) {
-      directionFactor.current = 1;
-    }
-
-    moveBy += directionFactor.current * moveBy * velocityFactor.get();
-
-    baseX.set(baseX.get() + moveBy);
-  });
-
-  return (
-    <div className="flex overflow-hidden py-2 md:py-3">
-      <motion.div
-        style={{ x }}
-        className="flex whitespace-nowrap gap-4 md:gap-6"
-      >
-        {[...items, ...items, ...items, ...items, ...items, ...items].map((item, i) => (
-          <div
-            key={i}
-            className="group flex items-center gap-5 px-6 py-3 bg-neutral-900 border border-neutral-800 rounded-full hover:border-neutral-700 transition-all duration-300"
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-neutral-800 group-hover:bg-neutral-500 transition-colors" />
-            <div className="flex flex-col">
-              <span className="text-base md:text-lg font-bold text-neutral-400 group-hover:text-white transition-colors leading-none mb-1">
-                {item.name}
-              </span>
-              <span className="text-[8px] uppercase tracking-[0.2em] font-black text-neutral-600 group-hover:text-neutral-500 transition-colors">
-                {item.cat}
-              </span>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-};
 
 const Experience = () => {
   const roles = [
@@ -137,80 +84,201 @@ const Experience = () => {
     { year: '2019 — 2020', company: 'Creative Inc', role: 'UI Designer' },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      filter: "blur(12px)",
+      y: 30,
+    },
+    visible: {
+      opacity: 1,
+      filter: "blur(0px)",
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1] as any
+      }
+    },
+  };
+
   return (
-    <section className="bg-white py-16 md:py-24 px-6 lg:px-12 font-bricolage border-t border-neutral-100">
+    <section className="bg-neutral-950 py-16 md:py-24 px-6 lg:px-12 font-bricolage border-t border-white/10">
       <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24">
         {/* Header */}
         <div className="md:w-1/3">
           <div className="flex items-center gap-4 mb-4">
-            <span className="text-[10px] uppercase tracking-[0.4em] font-black text-neutral-900">Experience</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] font-black text-neutral-500">Experience</span>
           </div>
-          <TextAnimate animation="blurInUp" by="word" className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight leading-none">
+          <TextAnimate animation="blurInUp" by="word" className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-none">
             Commercial History.
           </TextAnimate>
         </div>
 
         {/* List */}
-        <div className="md:w-2/3 flex flex-col">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.1, margin: "-5% 0px -5% 0px" }}
+          className="md:w-2/3 flex flex-col"
+        >
           {roles.map((role, i) => (
-            <div key={i} className="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-neutral-100 hover:pl-4 transition-all duration-300 cursor-default">
+            <motion.div
+              key={i}
+              variants={itemVariants}
+              whileHover={{
+                paddingLeft: "1rem",
+                transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] }
+              }}
+              className="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-white/5 cursor-default"
+              style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
+            >
               <div className="flex flex-col mb-1 md:mb-0">
-                <span className="text-lg md:text-xl font-bold text-neutral-900 group-hover:text-black transition-colors">{role.company}</span>
-                <span className="text-xs md:text-sm text-neutral-500 font-light">{role.role}</span>
+                <span className="text-lg md:text-xl font-bold text-white group-hover:text-neutral-300 transition-colors">{role.company}</span>
+                <span className="text-xs md:text-sm text-neutral-400 font-light">{role.role}</span>
               </div>
-              <span className="text-[10px] md:text-xs font-mono text-neutral-400 group-hover:text-neutral-900 transition-colors uppercase tracking-widest">{role.year}</span>
-            </div>
+              <span className="text-[10px] md:text-xs font-mono text-neutral-500 group-hover:text-white transition-colors uppercase tracking-widest">{role.year}</span>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
 const DigitalToolbox = () => {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start end", "end start"]
-  });
-
-  const row1 = [
-    { name: 'Next.js', cat: 'Framework' },
-    { name: 'React', cat: 'UI Library' },
-    { name: 'TypeScript', cat: 'Language' },
-    { name: 'JavaScript', cat: 'Language' },
-    { name: 'Tailwind CSS', cat: 'Styling' },
-    { name: 'Figma', cat: 'Product Design' },
-  ];
-
-  const row2 = [
-    { name: 'Framer Motion', cat: 'Animation' },
-    { name: 'Node.js', cat: 'Runtime' },
-    { name: 'Python', cat: 'Language' },
-    { name: 'PostgreSQL', cat: 'Database' },
-    { name: 'Prisma', cat: 'ORM' },
-    { name: 'Git', cat: 'Version Control' },
+  const stack = [
+    {
+      category: 'Frontend Engineering',
+      tools: [
+        { name: 'Next.js', icon: 'https://svgl.app/library/nextjs_icon_dark.svg' },
+        { name: 'React', icon: 'https://svgl.app/library/react_dark.svg' },
+        { name: 'TypeScript', icon: 'https://svgl.app/library/typescript.svg' },
+        { name: 'Tailwind', icon: 'https://svgl.app/library/tailwindcss.svg' },
+        { name: 'Motion', icon: 'https://svgl.app/library/motion_dark.svg' },
+        { name: 'Shadcn UI', icon: 'https://svgl.app/library/shadcn-ui_dark.svg' },
+        { name: 'React Query', icon: 'https://svgl.app/library/reactquery.svg' },
+        { name: 'Three.js', icon: 'https://svgl.app/library/threejs-dark.svg' }
+      ]
+    },
+    {
+      category: 'Backend & Systems',
+      tools: [
+        { name: 'Node.js', icon: 'https://svgl.app/library/nodejs.svg' },
+        { name: 'Python', icon: 'https://svgl.app/library/python.svg' },
+        { name: 'Go', icon: 'https://svgl.app/library/golang.svg' },
+        { name: 'PostgreSQL', icon: 'https://svgl.app/library/postgresql.svg' },
+        { name: 'MongoDB', icon: 'https://svgl.app/library/mongodb-icon-dark.svg' },
+        { name: 'Prisma', icon: 'https://svgl.app/library/prisma_dark.svg' },
+        { name: 'Docker', icon: 'https://svgl.app/library/docker.svg' },
+        { name: 'AWS', icon: 'https://svgl.app/library/aws_dark.svg' },
+        { name: 'Redis', icon: 'https://svgl.app/library/redis.svg' },
+        { name: 'Supabase', icon: 'https://svgl.app/library/supabase.svg' }
+      ]
+    },
+    {
+      category: 'Design & Tooling',
+      tools: [
+        { name: 'Figma', icon: 'https://svgl.app/library/figma.svg' },
+        { name: 'Framer', icon: 'https://svgl.app/library/framer_dark.svg' },
+        { name: 'Stripe', icon: 'https://svgl.app/library/stripe.svg' },
+        { name: 'Git', icon: 'https://svgl.app/library/git.svg' },
+        { name: 'GitHub', icon: 'https://svgl.app/library/github_dark.svg' },
+        { name: 'Vercel', icon: 'https://svgl.app/library/vercel_dark.svg' },
+        { name: 'Cloudflare', icon: 'https://svgl.app/library/cloudflare.svg' },
+        { name: 'Linear', icon: 'https://svgl.app/library/linear.svg' },
+        { name: 'Adobe', icon: 'https://svgl.app/library/adobe.svg' },
+        { name: 'Postman', icon: 'https://svgl.app/library/postman.svg' }
+      ]
+    },
   ];
 
   return (
-    <section id="toolbox" ref={targetRef} data-scroll-section className="bg-neutral-900 py-16 md:py-24 overflow-hidden font-bricolage">
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-12 mb-8 md:mb-12">
-        <div className="flex items-center gap-4 mb-4">
-          <span className="text-[10px] uppercase tracking-[0.4em] font-black text-neutral-500">Infrastructure</span>
+    <section id="toolbox" className="bg-white py-24 md:py-32 px-6 lg:px-12 font-bricolage border-t border-neutral-100">
+      <div className="max-w-screen-2xl mx-auto">
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-12 mb-20 md:mb-16">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-[10px] uppercase tracking-[0.4em] font-black text-neutral-900">Infrastructure</span>
+            </div>
+            <TextAnimate
+              animation="blurInUp"
+              by="word"
+              once={true}
+              className="text-4xl md:text-6xl font-bold text-neutral-950 tracking-tighter leading-[0.9] mb-8"
+            >
+              Technical Stack.
+            </TextAnimate>
+            <p className="text-neutral-500 text-base md:text-lg font-light leading-relaxed max-w-md">
+              A collection of technologies and tools I use to build robust, scalable, and high-performance digital products.
+            </p>
+          </div>
         </div>
-        <div className="max-w-3xl">
-          <TextAnimate animation="blurInUp" by="word" className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">
-            A curated stack for modern performance.
-          </TextAnimate>
-          <p className="text-neutral-500 text-sm md:text-base leading-relaxed font-light max-w-xl">
-            I leverage a specialized ecosystem of tools designed for precision, type-safety, and meaningful user interactions.
-          </p>
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-3 md:gap-4">
-        <MarqueeRow items={row1} baseVelocity={-0.4} />
-        <MarqueeRow items={row2} baseVelocity={0.4} />
+        {/* The Simplified Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 lg:gap-24">
+          {stack.map((group, i) => (
+            <div key={group.category} className="flex flex-col">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                viewport={{ once: false, margin: "-5% 0px" }}
+                className="flex items-center gap-3 mb-8"
+              >
+                <span className="text-[10px] font-mono text-neutral-300">0{i + 1}</span>
+                <h4 className="text-[10px] uppercase tracking-[0.3em] font-black text-neutral-400">
+                  {group.category}
+                </h4>
+              </motion.div>
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                {group.tools.map((tool, j) => (
+                  <motion.span
+                    key={tool.name}
+                    initial={{ opacity: 0, scale: 0.9, filter: 'blur(8px)' }}
+                    whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    transition={{
+                      duration: 0.5,
+                      delay: (i * 0.1) + (j * 0.04),
+                      ease: [0.215, 0.61, 0.355, 1]
+                    }}
+                    viewport={{ once: false, margin: "-5% 0px" }}
+                    whileHover={{
+                      scale: 1.05,
+                      backgroundColor: "#000",
+                      color: "#fff",
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    className="group flex items-center gap-2.5 px-3 py-2 bg-neutral-50 border border-neutral-100 rounded-full text-xs md:text-sm font-medium text-neutral-800 cursor-default select-none"
+                    style={{ backfaceVisibility: 'hidden' }}
+                  >
+                    <img
+                      src={tool.icon}
+                      alt={tool.name}
+                      className="w-4 h-4 md:w-5 md:h-5 object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                    {tool.name}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -320,90 +388,22 @@ const CaseStudies = () => {
   );
 };
 
-const CTA = () => {
-  return (
-    <section className="bg-white py-32 md:py-48 px-6 cursor-default font-bricolage border-t border-neutral-100">
-      <div className="max-w-screen-xl mx-auto flex flex-col items-center justify-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center"
-        >
-          <div className="mb-12 overflow-hidden">
-            <TextAnimate animation="blurInUp" by="word" className="text-4xl md:text-6xl font-bold tracking-tight text-neutral-900 leading-[1.1]">
-              Ready to define the next chapter?
-            </TextAnimate>
-          </div>
 
-          <Magnetic>
-            <button className="group relative px-10 py-5 bg-neutral-900 rounded-full overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95">
-              <span className="relative z-10 text-white font-medium text-sm md:text-base flex items-center gap-3">
-                Let&apos;s talk
-                <svg className="w-3 h-3 md:w-4 md:h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
-                </svg>
-              </span>
-              <div className="absolute inset-0 bg-neutral-800 transform scale-y-0 group-hover:scale-y-100 transition-transform origin-bottom duration-300" />
-            </button>
-          </Magnetic>
 
-          <p className="mt-12 text-neutral-400 text-sm font-light tracking-wide">
-            Currently available for select projects in Q4 2024.
-          </p>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
 
-const Footer = () => {
-  return (
-    <footer className="bg-white px-6 md:px-12 lg:px-24 pb-12 pt-24 font-bricolage border-t border-neutral-100">
-      <div className="max-w-screen-xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8 mb-24">
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400">Connect</span>
-            <a href="mailto:hello@ashish.design" className="text-sm font-medium text-neutral-900 hover:text-neutral-500 transition-colors">hello@ashish.design</a>
-            <span className="text-sm text-neutral-500 font-light">+1 (647) 555-0199</span>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400">Socials</span>
-            {['Twitter', 'LinkedIn', 'Instagram', 'GitHub'].map((link) => (
-              <a key={link} href="#" className="text-sm font-medium text-neutral-900 hover:text-neutral-500 transition-colors">{link}</a>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400">Legal</span>
-            <a href="#" className="text-sm font-medium text-neutral-900 hover:text-neutral-500 transition-colors">Privacy Policy</a>
-            <a href="#" className="text-sm font-medium text-neutral-900 hover:text-neutral-500 transition-colors">Terms of Service</a>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400">Version</span>
-            <span className="text-sm text-neutral-500 font-light">2024 Edition</span>
-            <span className="text-sm text-neutral-500 font-light">Local time: {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-t border-neutral-100 pt-12">
-          <h1 className="text-[12vw] leading-[0.8] font-bold text-neutral-200 tracking-tighter select-none">ASHISH</h1>
-          <div className="flex items-center gap-2 mb-2 md:mb-4">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-medium text-neutral-500 uppercase tracking-widest">All Systems Normal</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
 
 export default function Home() {
   const words = ["Design.", "Build.", "Ship.", "Solve.", "Scale.", "Impact."];
   const [index, setIndex] = useState(0);
+  const [showImage, setShowImage] = useState(false);
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
+
+  // Magnetic cursor effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
+  const cursorX = useSpring(mouseX, springConfig);
+  const cursorY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -414,12 +414,51 @@ export default function Home() {
 
   return (
     <>
+      {/* Custom Cursor - "it's me" */}
+      <AnimatePresence>
+        {showImage && (
+          <motion.div
+            className="fixed z-60 pointer-events-none flex items-center justify-center"
+            style={{
+              x: cursorX,
+              y: cursorY,
+            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <div className="bg-neutral-900 text-white text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap shadow-lg">
+              it's me ✨
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Full-screen Hero Section */}
-      <section className="relative min-h-screen w-full bg-white flex flex-col justify-between pt-24 md:pt-32 pb-8 overflow-hidden font-bricolage">
+      <section className="relative min-h-[85vh] md:min-h-screen w-full bg-white flex flex-col justify-between pt-20 md:pt-32 pb-6 md:pb-8 overflow-hidden font-bricolage">
         {/* Intro Text Section */}
-        <div className="grow flex flex-col justify-center px-6 md:px-12 lg:px-24">
-          <h1 className="text-[11vw] md:text-[8vw] lg:text-[7vw] font-bold tracking-tight leading-[1.2] md:leading-[1.1] text-neutral-900">
-            <span className="block text-neutral-400 font-light mb-2 md:mb-0">Hi, I am Ashish and I</span>
+        <div className="flex flex-col justify-start md:justify-center px-6 md:px-12 lg:px-24 pt-4 md:pt-0">
+          <h1 className="text-[12vw] md:text-[8vw] lg:text-[7vw] font-bold tracking-tight leading-[1.15] md:leading-[1.1] text-neutral-900">
+            <span className="block text-neutral-400 font-light mb-2 md:mb-0">
+              Hi, I am{' '}
+              <span
+                className="relative inline-block cursor-none group"
+                onMouseEnter={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setImagePosition({ x: rect.left + rect.width / 2, y: rect.top });
+                  setShowImage(true);
+                }}
+                onMouseMove={(e) => {
+                  mouseX.set(e.clientX);
+                  mouseY.set(e.clientY);
+                }}
+                onMouseLeave={() => setShowImage(false)}
+              >
+                <span className="relative z-10 text-neutral-600 hover:text-neutral-900 transition-colors duration-300">Ashish</span>
+              </span>
+              {' '}and I
+            </span>
             <div className="flex flex-nowrap items-center gap-x-3 md:gap-x-6">
               <span className="font-instrument italic font-normal text-neutral-500 whitespace-nowrap">love to</span>
               <div className="relative h-[1.2em] overflow-hidden inline-flex items-center">
@@ -439,31 +478,121 @@ export default function Home() {
               </div>
             </div>
           </h1>
+
+          {/* Floating Image on Ashish Hover */}
+          <AnimatePresence>
+            {showImage && (
+              <motion.div
+                initial={{ scale: 0, rotate: -12 }}
+                animate={{ scale: 1, rotate: 3 }}
+                exit={{ scale: 0, rotate: 12 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                  mass: 0.8
+                }}
+                className="fixed z-50 pointer-events-none origin-bottom"
+                style={{
+                  left: `min(max(${imagePosition.x}px, 80px), calc(100vw - 80px))`,
+                  top: imagePosition.y,
+                  transform: 'translate(-50%, -105%)'
+                }}
+              >
+                <motion.div
+                  className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-56 md:h-56 rounded-lg overflow-hidden shadow-2xl"
+                  initial={{ clipPath: 'circle(0% at 50% 100%)' }}
+                  animate={{ clipPath: 'circle(150% at 50% 100%)' }}
+                  exit={{ clipPath: 'circle(0% at 50% 100%)' }}
+                  transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+                >
+                  <img
+                    src="/ashish.jpeg"
+                    alt="Ashish"
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-12 px-6 lg:px-12 pb-4 md:pb-8 pt-8 mt-auto border-t border-neutral-50 md:border-transparent">
           {/* Keywords & Status */}
-          <div className="max-w-md w-full">
-            <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
-              {['Strategy', 'Design', 'Development'].map((tag) => (
-                <span key={tag} className="px-2.5 py-0.5 md:px-3 md:py-1 bg-neutral-50 text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400 rounded-full border border-neutral-100">
+          <div className="max-w-lg w-full">
+            {/* Animated Tags */}
+            <div className="flex flex-wrap gap-2 mb-4 md:mb-5">
+              {['Strategy', 'Design', 'Development'].map((tag, i) => (
+                <motion.span
+                  key={tag}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + i * 0.1, duration: 0.4, ease: "easeOut" }}
+                  whileHover={{ scale: 1.05, backgroundColor: "#171717", color: "#ffffff" }}
+                  className="px-2.5 py-0.5 md:px-3 md:py-1 bg-neutral-50 text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400 rounded-full border border-neutral-100 cursor-default transition-all duration-200"
+                >
                   {tag}
-                </span>
+                </motion.span>
               ))}
             </div>
-            <p className="text-sm md:text-base text-neutral-600 leading-relaxed font-light">
-              Crafting digital experiences that merge aesthetic precision with functional excellence. Currently based in Canada, working worldwide.
+
+            {/* Description with highlighted location */}
+            <p className="text-sm md:text-base text-neutral-600 leading-relaxed font-light mb-4">
+              Crafting digital experiences that merge aesthetic precision with functional excellence. Currently based in{' '}
+              <span className="inline-flex items-center gap-1 text-neutral-900 font-medium">
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Canada
+              </span>
+              , working worldwide.
             </p>
+
+            {/* Availability Indicator */}
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.8, duration: 0.4 }}
+              className="inline-flex items-center gap-2 bg-neutral-900 px-3 py-1.5 rounded-full border border-neutral-800 shadow-lg"
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+              </span>
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-white">Available for projects</span>
+            </motion.div>
           </div>
 
-          {/* Scroll Indicator */}
-          <div className="flex items-center justify-between w-full md:w-auto gap-10">
-            <div className="md:hidden flex items-center gap-2 bg-neutral-50 px-3 py-1.5 rounded-full border border-neutral-100">
-              <div className="w-1 h-1 rounded-full bg-neutral-900 animate-pulse" />
-              <span className="text-[9px] uppercase tracking-[0.2em] font-black text-neutral-900">Explore</span>
+          {/* Social Links & Scroll */}
+          <div className="flex items-center justify-between w-full md:w-auto gap-6 md:gap-8">
+            {/* Social Links */}
+            <div className="flex items-center gap-3">
+              {[
+                { name: 'GitHub', href: 'https://github.com', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg> },
+                { name: 'LinkedIn', href: 'https://linkedin.com', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg> },
+                { name: 'Twitter', href: 'https://twitter.com', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg> },
+              ].map((social, i) => (
+                <motion.a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + i * 0.1, duration: 0.4 }}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-neutral-50 border border-neutral-100 text-neutral-500 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors duration-300"
+                  title={social.name}
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
             </div>
 
+            {/* Scroll Button */}
             <Magnetic>
               <button
                 onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
@@ -493,10 +622,7 @@ export default function Home() {
       <DigitalToolbox />
 
       {/* Case Studies Section */}
-      <CaseStudies />
-
-      {/* Call To Action Section */}
-      <CTA />
+      {/* <CaseStudies /> */}
 
       {/* Footer */}
       <Footer />
