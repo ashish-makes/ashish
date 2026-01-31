@@ -98,9 +98,9 @@ export default function Header() {
     const menuLinks = [
         { href: '/', label: 'Home' },
         { href: '/work', label: 'Work' },
-        { href: '/about', label: 'About' },
-        { href: '/services', label: 'Services' },
-        { href: '/contact', label: 'Contact' },
+        { href: '/blog', label: 'Blog' },
+        { href: '/gallery', label: 'Gallery' },
+        { href: '/my-gears', label: 'My Gears' },
     ];
 
     return (
