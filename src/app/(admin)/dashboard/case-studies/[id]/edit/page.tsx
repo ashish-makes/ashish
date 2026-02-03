@@ -1,15 +1,29 @@
+import prisma from "@/lib/prisma";
 import CaseStudyForm from "@/components/admin/CaseStudyForm";
+import { notFound } from "next/navigation";
 
-// Simulated data
-const simulatedProjectData = {
-    title: "E-Commerce OS",
-    techStack: "Next.js, Tailwind, Prisma",
-    description: "# E-Commerce OS\n\nA full-scale commerce solution...",
-    visibility: "public",
-    githubLink: "https://github.com/ashish/ecommerce-os",
-    liveLink: "https://shop.ashish.dev",
-};
+export default async function EditCaseStudyPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
-export default function EditCaseStudyPage({ params }: { params: { id: string } }) {
-    return <CaseStudyForm mode="edit" initialData={simulatedProjectData} />;
+    const project = await prisma.caseStudy.findUnique({
+        where: { id },
+    });
+
+    if (!project) {
+        notFound();
+    }
+
+    const initialData = {
+        id: project.id,
+        title: project.title,
+        slug: (project as any).slug || "",
+        techStack: project.techStack.join(", "),
+        description: project.description,
+        visibility: project.visibility,
+        githubLink: project.githubLink || "",
+        liveLink: project.liveLink || "",
+        image: project.imageUrl || "",
+    };
+
+    return <CaseStudyForm mode="edit" initialData={initialData} />;
 }

@@ -1,14 +1,26 @@
+import prisma from "@/lib/prisma";
 import BlogForm from "@/components/admin/BlogForm";
+import { notFound } from "next/navigation";
 
-// In a real app, you would fetch data based on the ID
-const simulatedBlogData = {
-    title: "Why GSAP is Incredible",
-    slug: "why-gsap-is-incredible",
-    content: "# Why GSAP is Incredible\n\nGSAP stands for GreenSock Animation Platform...",
-    status: "draft",
-};
+export default async function EditBlogPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
-export default function EditBlogPage({ params }: { params: { id: string } }) {
-    // Use params.id to fetch data in a real implementation
-    return <BlogForm mode="edit" initialData={simulatedBlogData} />;
+    const blog = await prisma.blog.findUnique({
+        where: { id },
+    });
+
+    if (!blog) {
+        notFound();
+    }
+
+    const initialData = {
+        id: blog.id,
+        title: blog.title,
+        slug: blog.slug,
+        content: blog.content,
+        image: blog.imageUrl || "",
+        status: blog.status,
+    };
+
+    return <BlogForm mode="edit" initialData={initialData} />;
 }

@@ -24,6 +24,7 @@ model Blog {
 model CaseStudy {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
+  slug        String   @unique
   techStack   String[]
   description String
   visibility  String   @default("public") // public, private

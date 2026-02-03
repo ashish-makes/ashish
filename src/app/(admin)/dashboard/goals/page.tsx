@@ -1,45 +1,50 @@
-"use client";
+import React from "react";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import prisma from "@/lib/prisma";
+import GoalItem from "@/components/admin/GoalItem";
+import { AnimatePresence } from "framer-motion"; // Although we'll need a wrapper for client-side animations if we want them here, or just render the list.
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle } from "lucide-react";
+export const revalidate = 0;
 
-export default function GoalsAdminPage() {
+export default async function GoalsAdminPage() {
+    const goalsList = await prisma.goal.findMany({
+        orderBy: { createdAt: 'desc' }
+    });
+
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <p className="text-muted-foreground">Track and manage your professional milestones.</p>
-                <Button className="bg-primary hover:bg-primary/90">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Goal
-                </Button>
+        <div className="space-y-8">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">Milestones & Goals</h1>
+                    <p className="text-neutral-500 text-sm mt-1">Track your progress and personal growth targets.</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <Link
+                        href="/dashboard/goals/new"
+                        className="group relative inline-flex h-10 items-center justify-center gap-2 overflow-hidden rounded-full bg-neutral-900 px-6 font-medium text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                        <Plus className="w-4 h-4" />
+                        <span className="text-xs font-bold tracking-wide">New Goal</span>
+                    </Link>
+                </div>
             </div>
 
-            <div className="space-y-4">
-                {[
-                    { title: "Learn Rust", progress: 30, category: "Skills" },
-                    { title: "Complete Portfolio", progress: 90, category: "Projects" },
-                    { title: "Read 12 Books", progress: 15, category: "Personal" },
-                ].map((goal) => (
-                    <Card key={goal.title}>
-                        <CardContent className="p-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <div>
-                                    <h3 className="font-bold text-lg">{goal.title}</h3>
-                                    <span className="text-xs text-muted-foreground uppercase tracking-wider">{goal.category}</span>
-                                </div>
-                                <span className="text-2xl font-bold text-primary">{goal.progress}%</span>
-                            </div>
-                            <div className="w-full bg-secondary rounded-full h-3">
-                                <div
-                                    className="bg-chart-3 h-3 rounded-full transition-all duration-1000"
-                                    style={{ width: `${goal.progress}%` }}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+            {/* Goals List View (To-Do Style) */}
+            <div className="space-y-3">
+                {goalsList.length === 0 ? (
+                    <div className="bg-white p-12 rounded-3xl border border-dashed border-neutral-200 text-center">
+                        <p className="text-neutral-500 text-sm italic">No goals set yet. Start dreaming big!</p>
+                    </div>
+                ) : (
+                    goalsList.map((goal) => (
+                        <GoalItem key={goal.id} goal={goal} />
+                    ))
+                )}
             </div>
         </div>
     );
 }
+

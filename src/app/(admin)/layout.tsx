@@ -74,7 +74,7 @@ export default function AdminLayout({
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col min-h-screen w-full">
                 <DashboardHeader onMenuClick={() => setIsMobileOpen(true)} />
-                <main className="flex-1 p-4 md:p-12 bg-neutral-50/10">
+                <main className="flex-1 p-4 md:p-8 bg-neutral-50/10">
                     <div className="max-w-7xl mx-auto w-full">
                         {children}
                     </div>

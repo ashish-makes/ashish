@@ -19,36 +19,15 @@ interface BlogListProps {
 }
 
 const BlogList = ({ posts }: BlogListProps) => {
-    // If no posts from database, use some premium placeholders for demonstration
-    const displayPosts = posts.length > 0 ? posts : [
-        {
-            id: 'p1',
-            title: 'The Art of Minimalist Engineering',
-            slug: 'minimalist-engineering',
-            createdAt: new Date('2024-01-15'),
-            imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000',
-            status: 'published',
-            content: 'Exploring the boundary between structural necessity and aesthetic purity in modern software architecture.'
-        },
-        {
-            id: 'p2',
-            title: 'Building Scalable Design Systems',
-            slug: 'scalable-design-systems',
-            createdAt: new Date('2024-01-10'),
-            imageUrl: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=1000',
-            status: 'published',
-            content: 'A deep dive into creating robust, flexible component libraries that empower teams and maintain consistency.'
-        },
-        {
-            id: 'p3',
-            title: 'The Future of AI in Creative Workflows',
-            slug: 'future-of-ai',
-            createdAt: new Date('2024-01-05'),
-            imageUrl: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000',
-            status: 'published',
-            content: 'How generative intelligence is redefining the role of the designer and the process of digital creation.'
-        }
-    ];
+    const displayPosts = posts;
+
+    if (displayPosts.length === 0) {
+        return (
+            <div className="py-24 text-center border-t border-b border-neutral-100">
+                <p className="text-neutral-400 font-light text-lg">No stories published yet. Stay tuned.</p>
+            </div>
+        );
+    }
 
     const itemVariants: Variants = {
         hidden: {
