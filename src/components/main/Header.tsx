@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
+import { Sparkles } from 'lucide-react';
+import AIChatSidebar from '../chat/AIChatSidebar';
+import { TextShimmer } from '../motion-primitives/text-shimmer';
 
 // Animated digit component for the clock with blur fade effect
 const AnimatedDigit = ({ digit }: { digit: string }) => (
@@ -64,6 +67,7 @@ export default function Header() {
     const [fullMenuOpen, setFullMenuOpen] = useState(false);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     // Detect scroll position
     useEffect(() => {
@@ -120,7 +124,7 @@ export default function Header() {
                         </div>
 
                         {/* Right side controls */}
-                        <div className="flex items-center gap-4 md:gap-8">
+                        <div className="flex items-center gap-2 md:gap-4">
                             {/* Current Time & Date */}
                             <div className="hidden md:flex items-center gap-3 text-neutral-500">
                                 <div className="flex items-center gap-2">
@@ -135,6 +139,17 @@ export default function Header() {
                                     {currentTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </span>
                             </div>
+
+                            {/* AI Chat Toggle */}
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setIsChatOpen(true)}
+                                className="flex items-center gap-2 px-3 py-2 -mr-2 cursor-pointer group"
+                            >
+                                <TextShimmer className='text-sm uppercase tracking-widest' duration={1}>Ask AI</TextShimmer>
+                                <Sparkles className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 transition-colors" />
+                            </motion.button>
 
                             {/* Menu Trigger at the top */}
                             <motion.button
@@ -274,6 +289,12 @@ export default function Header() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* AI Chat Sidebar */}
+            <AIChatSidebar
+                isOpen={isChatOpen}
+                onClose={() => setIsChatOpen(false)}
+            />
         </>
     );
 }

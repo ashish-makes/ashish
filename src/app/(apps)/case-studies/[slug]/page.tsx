@@ -5,17 +5,15 @@ import Header from '@/components/main/Header';
 import Footer from '@/components/main/Footer';
 import Image from 'next/image';
 import Link from "next/link";
-import { ArrowLeft, Code2, ExternalLink, Github, Globe, Layout, Palette } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Github } from "lucide-react";
 import BlogContent from "@/components/blog/BlogContent";
+import { TextAnimate } from '@/components/ui/text-animate';
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    // Attempt to fetch by slug
     const project = await prisma.caseStudy.findUnique({
-        where: {
-            slug,
-        },
+        where: { slug },
     });
 
     if (!project) {
@@ -26,104 +24,126 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         <main className="min-h-screen bg-white text-neutral-950 font-bricolage selection:bg-neutral-950 selection:text-white">
             <Header />
 
-            <article className="pt-32 pb-24 px-6 lg:px-12">
-                <div className="max-w-screen-2xl mx-auto">
-                    {/* Header Controls */}
-                    <div className="flex items-center justify-between mb-12">
-                        <Link
-                            href="/work"
-                            className="inline-flex items-center gap-2 text-neutral-400 hover:text-neutral-950 transition-colors group"
-                        >
-                            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                            <span className="text-xs font-bold uppercase tracking-widest">Back to Projects</span>
-                        </Link>
+            {/* EXACT Gallery Page Header Structure */}
+            <section className="relative pt-32 pb-8 px-6 lg:px-12 overflow-hidden border-b border-neutral-100">
+                <div className="max-w-screen-2xl mx-auto relative z-10">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+                        <div className="relative">
+                            <div className="flex items-center gap-4 mb-6">
+                                <Link href="/work" className="group flex items-center gap-2">
+                                    <ArrowLeft className="w-3 h-3 text-neutral-300 group-hover:text-neutral-950 transition-colors" />
+                                    <span className="text-[10px] uppercase tracking-[0.5em] text-neutral-400 group-hover:text-neutral-950 transition-colors">Visual Archives / 00{project.visibility === 'public' ? '1' : '0'}</span>
+                                </Link>
+                            </div>
 
-                        <div className="flex items-center gap-4">
-                            {project.githubLink && (
-                                <a
-                                    href={project.githubLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-3 rounded-full border border-neutral-100 hover:bg-neutral-50 transition-colors text-neutral-500 hover:text-neutral-950"
-                                    title="GitHub Repository"
+                            <div className="relative">
+                                <TextAnimate
+                                    animation="blurInUp"
+                                    by="character"
+                                    once={true}
+                                    className="relative z-10 text-7xl md:text-[10vw] tracking-tighter leading-[0.8]"
                                 >
-                                    <Github className="w-5 h-5" />
-                                </a>
-                            )}
-                            {project.liveLink && (
-                                <a
-                                    href={project.liveLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-neutral-950 text-white text-sm font-bold hover:bg-neutral-800 transition-all hover:shadow-lg hover:-translate-y-0.5"
-                                >
-                                    <span>Live Preview</span>
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
-                            )}
+                                    {project.title + "."}
+                                </TextAnimate>
+                            </div>
+                        </div>
+
+                        <div className="max-w-sm mb-4">
+                            <p className="text-neutral-500 text-base md:text-lg font-light leading-relaxed mb-6 font-instrument italic">
+                                An editorial exploration into the design and functional development of {project.title}.
+                            </p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-mono text-neutral-300 uppercase tracking-widest">{project.visibility} ACCESS</span>
+                                <span className="w-4 h-px bg-neutral-100" />
+                                <span className="text-[10px] font-mono text-neutral-300 uppercase tracking-widest">
+                                    EST. {new Date(project.createdAt).getFullYear()}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Subtle architectural background element */}
+                <div className="absolute top-0 right-0 w-1/2 h-full border-l border-neutral-50 z-0 hidden md:block" />
+            </section>
+
+            <article className="max-w-screen-2xl mx-auto px-6 lg:px-12 py-8 pb-16">
+                {/* Hero Image - Sharp Edges */}
+                {project.imageUrl && (
+                    <div className="mb-6">
+                        <div className="relative aspect-[21/9] w-full bg-neutral-50 border border-neutral-100">
+                            <Image
+                                src={project.imageUrl}
+                                alt={project.title}
+                                fill
+                                className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                priority
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* Information Console */}
+                <div className="flex flex-wrap items-center justify-between gap-12 py-8 border-y border-neutral-100 mb-12 bg-neutral-50/50 px-8">
+                    <div className="flex flex-wrap items-center gap-x-16 gap-y-8">
+                        <div>
+                            <p className="text-[10px] font-black text-neutral-950 uppercase tracking-[0.3em] mb-3">Core Stack</p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {project.techStack.map(tech => (
+                                    <span key={tech} className="px-2.5 py-1 bg-neutral-950 text-white text-[9px] font-bold uppercase tracking-widest">
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black text-neutral-950 uppercase tracking-[0.3em] mb-3">Timeline</p>
+                            <p className="text-xs font-bold uppercase tracking-wider text-neutral-950">
+                                {new Date(project.createdAt).toLocaleDateString('en-US', {
+                                    month: 'long',
+                                    year: 'numeric'
+                                })}
+                            </p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                        {/* Info Column */}
-                        <div className="lg:col-span-5 space-y-12">
-                            <div>
-                                <h1 className="text-6xl md:text-8xl font-bold tracking-tight leading-[0.85] mb-8">
-                                    {project.title}
-                                </h1>
+                    <div className="flex items-center gap-10">
+                        {project.githubLink && (
+                            <a
+                                href={project.githubLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.4em] text-neutral-600 hover:text-neutral-950 transition-colors group"
+                            >
+                                <Github className="w-4 h-4 text-neutral-400 group-hover:text-neutral-950 transition-colors" />
+                                <span>Codebase</span>
+                            </a>
+                        )}
+                        {project.liveLink && (
+                            <a
+                                href={project.liveLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.4em] text-neutral-950 hover:text-neutral-400 transition-all group"
+                            >
+                                <span>Experience</span>
+                                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            </a>
+                        )}
+                    </div>
+                </div>
 
-                                <div className="flex flex-wrap gap-2">
-                                    {project.techStack.map((tech) => (
-                                        <span
-                                            key={tech}
-                                            className="px-4 py-2 rounded-full bg-neutral-100 text-[10px] font-bold uppercase tracking-widest text-neutral-500"
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="pt-12 border-t border-neutral-100">
-                                <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-neutral-300 mb-6 flex items-center gap-2">
-                                    <Code2 className="w-4 h-4" />
-                                    The Implementation
-                                </h2>
-                                <BlogContent content={project.description} />
-                            </div>
-                        </div>
-
-                        {/* Visual Column */}
-                        <div className="lg:col-span-7">
-                            {project.imageUrl && (
-                                <div className="sticky top-32">
-                                    <div className="relative aspect-4/3 md:aspect-square w-full rounded-[2.5rem] overflow-hidden bg-neutral-100 shadow-2xl">
-                                        <Image
-                                            src={project.imageUrl}
-                                            alt={project.title}
-                                            fill
-                                            className="object-cover"
-                                            priority
-                                        />
-                                    </div>
-
-                                    <div className="mt-8 grid grid-cols-2 gap-4">
-                                        <div className="p-8 rounded-3xl bg-neutral-50 border border-neutral-100">
-                                            <p className="text-[10px] font-bold text-neutral-300 uppercase tracking-widest mb-1">Status</p>
-                                            <p className="text-sm font-bold capitalize">{project.visibility}</p>
-                                        </div>
-                                        <div className="p-8 rounded-3xl bg-neutral-50 border border-neutral-100">
-                                            <p className="text-[10px] font-bold text-neutral-300 uppercase tracking-widest mb-1">Created</p>
-                                            <p className="text-sm font-bold">
-                                                {new Date(project.createdAt).toLocaleDateString('en-US', {
-                                                    month: 'long',
-                                                    year: 'numeric'
-                                                })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                {/* Content Area */}
+                <div className="max-w-3xl">
+                    <div className="prose-container">
+                        <header className="mb-8">
+                            <span className="text-[9px] font-black text-neutral-300 uppercase tracking-[0.4em] block mb-2">Technical Breakdown</span>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900">
+                                The Blueprint
+                            </h2>
+                        </header>
+                        <div className="text-neutral-600 leading-relaxed text-lg font-light">
+                            <BlogContent content={project.description} />
                         </div>
                     </div>
                 </div>

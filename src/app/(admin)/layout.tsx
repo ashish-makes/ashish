@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
     LayoutDashboard,
     BookOpen,
@@ -11,7 +12,8 @@ import {
     Image as ImageIcon,
     ArrowLeft,
     PanelLeftClose,
-    PanelLeftOpen
+    PanelLeftOpen,
+    LogOut
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -158,7 +160,7 @@ function SidebarContent({ isCollapsed, setIsCollapsed, pathname, isMobile = fals
                 </div>
             </nav>
 
-            <div className="mt-auto px-2 pb-4">
+            <div className="mt-auto px-2 space-y-1 pb-4">
                 <Link
                     href="/"
                     className={cn("flex items-center gap-3 px-3 py-2 group transition-all rounded-md text-neutral-500 hover:text-white hover:bg-neutral-900/50", isCollapsed ? "justify-center" : "")}
@@ -166,10 +168,21 @@ function SidebarContent({ isCollapsed, setIsCollapsed, pathname, isMobile = fals
                     <ArrowLeft className="w-4 h-4 transition-colors" />
                     {!isCollapsed && (
                         <span className="text-sm font-medium tracking-wide whitespace-nowrap">
-                            Logout
+                            Portfolio
                         </span>
                     )}
                 </Link>
+                <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className={cn("w-full flex items-center gap-3 px-3 py-2 group transition-all rounded-md text-neutral-500 hover:text-red-500 hover:bg-red-500/10", isCollapsed ? "justify-center" : "")}
+                >
+                    <LogOut className="w-4 h-4 transition-colors" />
+                    {!isCollapsed && (
+                        <span className="text-sm font-medium tracking-wide whitespace-nowrap">
+                            Logout
+                        </span>
+                    )}
+                </button>
             </div>
         </>
     );

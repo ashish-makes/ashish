@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
+import { stripHtml } from '@/lib/utils';
 
 interface BlogPost {
     id: string;
@@ -91,7 +92,7 @@ const BlogList = ({ posts }: BlogListProps) => {
 
                             {post.content && (
                                 <p className="text-neutral-500 text-sm font-light leading-relaxed mb-6 group-hover:text-neutral-800 transition-colors duration-500 line-clamp-2">
-                                    {post.content}
+                                    {stripHtml(post.content)}
                                 </p>
                             )}
 
