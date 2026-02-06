@@ -16,8 +16,29 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Ashish - UI/UX Designer",
-  description: "Creative portfolio showcasing UI/UX design work",
+  title: {
+    default: "Ashish • Creative technologist & designer",
+    template: "%s | Ashish"
+  },
+  description: "Creative portfolio of Ashish, a UI/UX designer and technologist focused on building digital experiences that bridge precision and emotion.",
+  openGraph: {
+    title: "Ashish • Creative technologist & designer",
+    description: "Creative portfolio of Ashish, showcasing work at the intersection of design and engineering.",
+    url: "https://ashish.cv",
+    siteName: "Ashish Portfolio",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ashish",
+    description: "Software Developer.",
+    creator: "@ashish_makes",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 import SmoothScroll from "@/components/SmoothScroll";

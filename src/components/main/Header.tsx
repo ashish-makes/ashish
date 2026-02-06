@@ -101,10 +101,11 @@ export default function Header() {
 
     const menuLinks = [
         { href: '/', label: 'Home' },
-        { href: '/work', label: 'Work' },
+        { href: '/my-gears', label: 'My Gears' },
         { href: '/blog', label: 'Blog' },
         { href: '/gallery', label: 'Gallery' },
-        { href: '/my-gears', label: 'My Gears' },
+        { href: '/work', label: 'Work' },
+        { href: '/checklist', label: 'Goals' },
     ];
 
     return (
@@ -241,7 +242,7 @@ export default function Header() {
                         {/* Menu Content */}
                         <div className="flex-1 flex flex-col justify-center px-6 lg:px-24">
                             <nav
-                                className="space-y-4 lg:space-y-6"
+                                className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4"
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 {menuLinks.map((link, index) => {
@@ -260,9 +261,9 @@ export default function Header() {
                                                 href={link.href}
                                                 onMouseEnter={() => setHoveredIndex(index)}
                                                 className={`
-                                                    block text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-none
+                                                    block text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-none
                                                     transition-all duration-500 ease-out
-                                                    ${isTarget ? 'text-white translate-x-4 md:translate-x-8' : 'text-white/20 scale-95'}
+                                                    ${isTarget ? 'text-white translate-x-2 md:translate-x-4' : 'text-white/20 scale-95'}
                                                 `}
                                                 onClick={() => setFullMenuOpen(false)}
                                             >
@@ -277,13 +278,13 @@ export default function Header() {
                         {/* Menu Footer */}
                         <div className="w-full px-6 lg:px-24 py-12 flex flex-col md:flex-row justify-between items-end gap-8 text-white/80 border-t border-white/5">
                             <div className="flex flex-col gap-2">
-                                <span className="text-xs uppercase font-bold tracking-[0.2em]">Contact</span>
-                                <a href="mailto:hello@ashish.design" className="text-base text-white hover:underline underline-offset-8">hello@ashish.design</a>
+                                <span className="text-xs uppercase font-bold tracking-[0.2em] text-neutral-500">Contact</span>
+                                <a href="mailto:ashindia.003@gmail.com" className="text-base text-white hover:underline underline-offset-8 transition-all">ashindia.003@gmail.com</a>
                             </div>
                             <div className="flex gap-8">
-                                <a href="#" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">Instagram</a>
-                                <a href="#" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">LinkedIn</a>
-                                <a href="#" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">Behance</a>
+                                <a href="https://linkedin.com/in/ashish-makes" target="_blank" rel="noopener noreferrer" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">LinkedIn</a>
+                                <a href="https://github.com/ashish-makes" target="_blank" rel="noopener noreferrer" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">GitHub</a>
+                                <a href="https://x.com/ashish_makes" target="_blank" rel="noopener noreferrer" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">X</a>
                             </div>
                         </div>
                     </motion.div>

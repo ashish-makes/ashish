@@ -78,10 +78,28 @@ export async function deleteCaseStudy(id: string) {
         });
 
         revalidatePath("/dashboard/case-studies");
+
         revalidatePath("/work");
         return { success: true };
     } catch (error) {
         console.error("Error deleting case study:", error);
         return { success: false, error: "Failed to delete case study" };
+    }
+}
+
+export async function getCaseStudies() {
+    try {
+        const caseStudies = await prisma.caseStudy.findMany({
+            where: {
+                visibility: 'public'
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return { success: true, caseStudies };
+    } catch (error) {
+        console.error("Error fetching case studies:", error);
+        return { success: false, error: "Failed to fetch case studies" };
     }
 }

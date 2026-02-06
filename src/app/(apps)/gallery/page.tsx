@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import prisma from '@/lib/prisma';
 import GalleryGrid from '@/components/gallery/GalleryGrid';
 import Footer from '@/components/main/Footer';
@@ -6,6 +7,11 @@ import Header from '@/components/main/Header';
 import { TextAnimate } from '@/components/ui/text-animate';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+    title: "Gallery",
+    description: "A visual archive of captures and moments, exploring photography and the art of seeing.",
+};
 
 export default async function GalleryPage() {
     const images = await prisma.media.findMany({

@@ -1,226 +1,106 @@
-'use client';
+import { Metadata } from 'next';
+import GearsClient from './GearsClient';
 
-import React from 'react';
-import { motion, Variants } from 'framer-motion';
-import { TextAnimate } from '@/components/ui/text-animate';
-import Footer from '@/components/main/Footer';
-
-const iconMap: Record<string, string> = {
-    'Apple': 'https://svgl.app/library/apple.svg',
-    'Amazon': 'https://svgl.app/library/amazon.svg',
-    'Logitech': 'https://svgl.app/library/logitech.svg',
-    'VS Code': 'https://svgl.app/library/vscode.svg',
-    'Figma': 'https://svgl.app/library/figma.svg',
-    'Arc': 'https://svgl.app/library/arc.svg',
-    'Warp': 'https://svgl.app/library/warp.svg',
-    'Spotify': 'https://svgl.app/library/spotify.svg',
-    'Linear': 'https://svgl.app/library/linear.svg',
-    'Slack': 'https://svgl.app/library/slack.svg',
-    'Notion': 'https://svgl.app/library/notion.svg'
+export const metadata: Metadata = {
+    title: "My Gears",
+    description: "A professional collection of hardware and software tools used by Ashish for creative design and technical development.",
 };
 
-const TechStackPage = () => {
-    const categories = [
-        {
-            title: 'Hardware',
-            items: [
-                {
-                    name: 'MacBook Pro M3 Max',
-                    description: '14-inch, 64GB RAM, 2TB SSD. The ultimate machine for heavy creative workloads.',
-                    brand: 'Apple',
-                    link: 'https://apple.com',
-                    specs: 'M3 Max • 64GB • 2TB'
-                },
-                {
-                    name: 'Studio Display',
-                    description: '27-inch 5K Retina display. Essential for color-accurate design work.',
-                    brand: 'Apple',
-                    link: 'https://apple.com',
-                    specs: '5K Retina • Nano-texture'
-                },
-                {
-                    name: 'MX Master 3S',
-                    description: 'Ergonomic precision mouse that handles multi-device flow seamlessly.',
-                    brand: 'Logitech',
-                    link: 'https://amazon.com',
-                    specs: '8K DPI • Silent Clicks'
-                },
-                {
-                    name: 'Keychron Q1 Pro',
-                    description: 'Custom mechanical keyboard with aluminum body and tactile switches.',
-                    brand: 'Amazon',
-                    link: 'https://amazon.com',
-                    specs: '75% Layout • Wireless'
-                }
-            ]
-        },
-        {
-            title: 'Software',
-            items: [
-                {
-                    name: 'VS Code',
-                    description: 'Customized with Tokyo Night and Mono Lisa font.',
-                    brand: 'VS Code',
-                    link: 'https://code.visualstudio.com',
-                    specs: 'Tokyo Night • Mono Lisa'
-                },
-                {
-                    name: 'Figma',
-                    description: 'The standard for collaborative interface design.',
-                    brand: 'Figma',
-                    link: 'https://figma.com',
-                    specs: 'Design • Prototyping'
-                },
-                {
-                    name: 'Arc Browser',
-                    description: 'A browser that actually feels like an operating system for the web.',
-                    brand: 'Arc',
-                    link: 'https://arc.net',
-                    specs: 'Space-based • Minimal'
-                },
-                {
-                    name: 'Warp',
-                    description: 'AI-powered terminal that makes command line usage efficient.',
-                    brand: 'Warp',
-                    link: 'https://warp.dev',
-                    specs: 'Zsh • AI Integration'
-                }
-            ]
-        },
-        {
-            title: 'Setup',
-            items: [
-                {
-                    name: 'Herman Miller Aeron',
-                    description: 'Classic ergonomic support for 12+ hour session comfort.',
-                    brand: 'Amazon',
-                    link: 'https://amazon.com',
-                    specs: 'Size B • PostureFit SL'
-                },
-                {
-                    name: 'Fully Jarvis Desk',
-                    description: 'Bamboo top sit-stand desk for dynamic work postures.',
-                    brand: 'Amazon',
-                    link: 'https://amazon.com',
-                    specs: 'Sit-Stand • Bamboo'
-                },
-                {
-                    name: 'BenQ ScreenBar Halo',
-                    description: 'Smart lighting that reduces eye strain without screen glare.',
-                    brand: 'Amazon',
-                    link: 'https://amazon.com',
-                    specs: 'Auto-dimming • Wireless Control'
-                }
-            ]
-        }
-    ];
-
-    const itemVariants: Variants = {
-        hidden: { opacity: 0, filter: "blur(12px)", y: 40 },
-        visible: (i: number) => ({
-            opacity: 1,
-            filter: "blur(0px)",
-            y: 0,
-            transition: {
-                duration: 0.8,
-                delay: (i % 3) * 0.1,
-                ease: [0.16, 1, 0.3, 1]
+const categories = [
+    {
+        title: 'Hardware',
+        items: [
+            {
+                name: 'MacBook Air M2',
+                description: '13-inch liquid retina display. Perfectly portable for design and development.',
+                brand: 'Apple',
+                link: 'https://a.co/d/0ewicnJp',
+                specs: 'M2 • 8-Core CPU'
+            },
+            {
+                name: 'Lenovo Legion Pro 5 (2025)',
+                description: 'Intel Core Ultra 7 255HX, RTX 5070, 32GB DDR5. Built for high-performance computing.',
+                brand: 'Lenovo',
+                link: 'https://a.co/d/0dPqVEUW',
+                specs: 'Ultra 7 • RTX 5070 • 32GB'
+            },
+            {
+                name: 'HP 24mh Monitor',
+                description: '24-inch IPS display with tilt adjustment and anti-glare panel for ergonomic focus.',
+                brand: 'HP',
+                link: 'https://a.co/d/0eONNStO',
+                specs: '24" • IPS • Anti-glare'
+            },
+            {
+                name: 'Lenovo Legion K500 Keyboard',
+                description: 'RGB mechanical gaming keyboard with red switches and detachable palm rest.',
+                brand: 'Lenovo',
+                link: 'https://a.co/d/0j2sDzZm',
+                specs: 'Mechanical • Red Switch'
+            },
+            {
+                name: 'Lenovo 530 Wireless Mouse',
+                description: 'Reliable USB-A wireless mouse with a clean, minimalist design.',
+                brand: 'Lenovo',
+                link: 'https://a.co/d/0ewy3UMP',
+                specs: '2.4GHz • Ambidextrous'
+            },
+            {
+                name: 'Amazon Echo Dot',
+                description: 'Smart speaker with Alexa for seamless workspace automation and high-fidelity sound.',
+                brand: 'Amazon',
+                link: 'https://a.co/d/05YjkHt3',
+                specs: '5th Gen • Alexa'
             }
-        })
-    };
+        ]
+    },
+    {
+        title: 'Software',
+        items: [
+            {
+                name: 'VS Code',
+                description: 'My primary editor, customized for a clean and efficient developer experience.',
+                brand: 'VS Code',
+                link: 'https://code.visualstudio.com',
+                specs: 'Tokyo Night • Extensions'
+            },
+            {
+                name: 'Antigravity',
+                description: 'Advanced agentic AI assistant powered by Google Deepmind for complex coding tasks.',
+                brand: 'Antigravity',
+                link: 'https://antigravity.google/',
+                specs: 'Agentic AI • Deepmind'
+            },
+            {
+                name: 'Cursor',
+                description: 'AI-first code editor that fundamentally changes how I write and ship code.',
+                brand: 'Cursor',
+                link: 'https://cursor.sh',
+                specs: 'AI Native • VS Code Fork'
+            }
+        ]
+    },
+    {
+        title: 'Workspace',
+        items: [
+            {
+                name: 'MotionGrey Standing Desk',
+                description: 'Electric height adjustable desk with a solid black frame for ergonomic excellence.',
+                brand: 'MotionGrey',
+                link: 'https://a.co/d/04pKNyyj',
+                specs: 'Single Motor • 55" x 24"'
+            },
+            {
+                name: 'Mimoglad Office Chair',
+                description: 'High-back ergonomic chair with adjustable lumbar support and flip-up armrests.',
+                brand: 'Mimoglad',
+                link: 'https://a.co/d/08CaRycg',
+                specs: 'High Back • Lumbar Support'
+            }
+        ]
+    }
+];
 
-    return (
-        <main className="min-h-screen bg-white text-neutral-950 font-bricolage selection:bg-neutral-950 selection:text-white">
-            {/* Header Section */}
-            <section className="pt-32 pb-16 px-6 lg:px-12 border-b border-neutral-100">
-                <div className="max-w-screen-2xl mx-auto">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                        <div className="max-w-4xl">
-                            <div className="flex items-center gap-4 mb-4">
-                                <span className="text-[10px] uppercase tracking-[0.4em] text-neutral-400">Digital Toolbox</span>
-                            </div>
-                            <TextAnimate
-                                animation="blurInUp"
-                                by="character"
-                                once={true}
-                                className="relative z-10 text-7xl md:text-[10vw] tracking-tighter leading-[0.8]"
-                            >
-                                The Gear.
-                            </TextAnimate>
-                        </div>
-                        <p className="text-neutral-500 text-base md:text-lg font-light leading-relaxed max-w-sm pb-2">
-                            A curated collection of hardware and software used to build digital experiences.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Tech Sections */}
-            {categories.map((category, idx) => (
-                <section key={category.title} className={`py-24 px-6 lg:px-12 ${idx % 2 !== 0 ? 'bg-neutral-50' : 'bg-white'} border-b border-neutral-100`}>
-                    <div className="max-w-screen-2xl mx-auto">
-                        <div className="flex flex-col mb-16">
-                            <span className="text-xs font-mono text-neutral-300 mb-4">0{idx + 1}</span>
-                            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase">{category.title}</h2>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-                            {category.items.map((item, i) => (
-                                <motion.div
-                                    key={item.name}
-                                    custom={i}
-                                    initial="hidden"
-                                    whileInView="visible"
-                                    viewport={{ once: false, amount: 0.2, margin: "-5% 0px" }}
-                                    variants={itemVariants}
-                                    className="group flex flex-col justify-between p-8 bg-white border border-neutral-100 rounded-sm hover:border-neutral-900 transition-colors duration-500"
-                                >
-                                    <div>
-                                        <div className="flex items-center justify-between mb-6">
-                                            <div className="w-10 h-10 flex items-center justify-center bg-neutral-50 rounded-full group-hover:bg-neutral-900 transition-colors duration-500">
-                                                {iconMap[item.brand] ? (
-                                                    <img
-                                                        src={iconMap[item.brand]}
-                                                        alt={item.brand}
-                                                        className="w-5 h-5 object-contain group-hover:invert transition-all"
-                                                    />
-                                                ) : (
-                                                    <span className="text-[10px] font-bold text-neutral-400 group-hover:text-white">{item.brand[0]}</span>
-                                                )}
-                                            </div>
-                                            <span className="text-[8px] font-mono text-neutral-300 uppercase tracking-widest">{item.specs}</span>
-                                        </div>
-
-                                        <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-3 group-hover:translate-x-1 transition-transform duration-500">
-                                            {item.name}
-                                        </h3>
-                                        <p className="text-neutral-500 text-sm font-light leading-relaxed mb-8 group-hover:text-neutral-800 transition-colors duration-500">
-                                            {item.description}
-                                        </p>
-                                    </div>
-
-                                    <a
-                                        href={item.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 hover:text-neutral-950 transition-colors"
-                                    >
-                                        View Product
-                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                        </svg>
-                                    </a>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            ))}
-
-            {/* Footer */}
-            <Footer />
-        </main>
-    );
-};
-
-export default TechStackPage;
+export default function Page() {
+    return <GearsClient categories={categories} />;
+}
