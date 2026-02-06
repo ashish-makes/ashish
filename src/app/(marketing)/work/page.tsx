@@ -44,6 +44,9 @@ export default async function WorkPage() {
         }
     });
 
+    // Explicitly typecast or ensure Prisma Client types are picked up.
+    // Assuming Prisma Client is generated, project types should have videoUrl.
+
     const workSchema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -106,7 +109,17 @@ export default async function WorkPage() {
                                     >
                                         {/* Visual Placeholder */}
                                         <div className="relative aspect-16/10 overflow-hidden bg-neutral-50 mb-6 rounded-sm">
-                                            {project.imageUrl ? (
+                                            {project.videoUrl ? (
+                                                <video
+                                                    src={project.videoUrl}
+                                                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                                    muted
+                                                    loop
+                                                    autoPlay
+                                                    playsInline
+                                                    poster={project.imageUrl || undefined}
+                                                />
+                                            ) : project.imageUrl ? (
                                                 <img
                                                     src={project.imageUrl}
                                                     alt={project.title}
@@ -116,7 +129,7 @@ export default async function WorkPage() {
                                                 <div className="absolute inset-0 flex items-center justify-center opacity-10 blur-3xl group-hover:opacity-20 transition-opacity duration-700 bg-neutral-900" />
                                             )}
                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                {!project.imageUrl && (
+                                                {!project.imageUrl && !project.videoUrl && (
                                                     <span className="text-[10px] uppercase tracking-[0.5em] font-black text-neutral-200 group-hover:scale-110 transition-transform duration-700 opacity-50">
                                                         Project Showcase
                                                     </span>

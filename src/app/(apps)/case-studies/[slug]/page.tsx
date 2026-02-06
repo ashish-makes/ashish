@@ -109,7 +109,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
                 <article className="max-w-screen-2xl mx-auto px-6 lg:px-12 py-8 pb-16">
                     {/* Hero Image - Sharp Edges */}
-                    {project.imageUrl && (
+                    {/* Hero Image - Sharp Edges */}
+                    {project.imageUrl ? (
                         <div className="mb-6">
                             <div className="relative aspect-21/9 w-full bg-neutral-50 border border-neutral-100">
                                 <Image
@@ -121,7 +122,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                                 />
                             </div>
                         </div>
-                    )}
+                    ) : null}
 
                     {/* Information Console */}
                     <div className="flex flex-wrap items-center justify-between gap-12 py-8 border-y border-neutral-100 mb-12 bg-neutral-50/50 px-8">
@@ -171,6 +172,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                                 </a>
                             )}
                         </div>
+
+
                     </div>
 
                     {/* Content Area */}

@@ -19,6 +19,7 @@ interface CaseStudyFormProps {
         githubLink?: string;
         liveLink?: string;
         image: string;
+        videoUrl?: string;
         id?: string;
     };
     mode: "create" | "edit";
@@ -45,6 +46,7 @@ export default function CaseStudyForm({ initialData, mode }: CaseStudyFormProps)
         githubLink: initialData?.githubLink || "",
         liveLink: initialData?.liveLink || "",
         image: initialData?.image || "",
+        videoUrl: initialData?.videoUrl || "",
     });
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,48 +221,93 @@ export default function CaseStudyForm({ initialData, mode }: CaseStudyFormProps)
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Featured Image</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div className="space-y-4">
+                                <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Featured Image</label>
 
-                            {formData.image ? (
-                                <div className="relative group rounded-2xl overflow-hidden border border-neutral-200">
-                                    <div className="aspect-video relative">
-                                        <Image
-                                            src={formData.image}
-                                            alt="Project image"
-                                            fill
-                                            className="object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                            <UploadButton
-                                                label="Change Image"
-                                                onUpload={(url) => setFormData({ ...formData, image: url })}
-                                                showGalleryUpload={false}
-                                                className="bg-white text-neutral-900 px-4 py-2 rounded-full text-xs font-bold hover:bg-neutral-100 transition-colors"
+                                {formData.image ? (
+                                    <div className="relative group rounded-2xl overflow-hidden border border-neutral-200">
+                                        <div className="aspect-video relative">
+                                            <Image
+                                                src={formData.image}
+                                                alt="Project image"
+                                                fill
+                                                className="object-cover"
                                             />
-                                            <button
-                                                type="button"
-                                                onClick={() => setFormData({ ...formData, image: "" })}
-                                                className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                <UploadButton
+                                                    label="Change Image"
+                                                    onUpload={(url) => setFormData({ ...formData, image: url })}
+                                                    showGalleryUpload={false}
+                                                    className="bg-white text-neutral-900 px-4 py-2 rounded-full text-xs font-bold hover:bg-neutral-100 transition-colors"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, image: "" })}
+                                                    className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <UploadButton
-                                    onUpload={(url) => setFormData({ ...formData, image: url })}
-                                    showGalleryUpload={false}
-                                    label="Upload Featured Image"
-                                    className="w-full border-2 border-dashed border-neutral-200 rounded-2xl p-10 flex flex-col items-center justify-center gap-3 hover:border-neutral-400 transition-colors cursor-pointer group bg-neutral-50/30"
-                                    icon={
-                                        <div className="p-3 bg-neutral-100 rounded-xl group-hover:bg-neutral-200 transition-colors">
-                                            <Upload className="h-6 w-6 text-neutral-400 group-hover:text-neutral-600" />
+                                ) : (
+                                    <UploadButton
+                                        onUpload={(url) => setFormData({ ...formData, image: url })}
+                                        showGalleryUpload={false}
+                                        label="Upload Featured Image"
+                                        className="w-full border-2 border-dashed border-neutral-200 rounded-2xl p-10 flex flex-col items-center justify-center gap-3 hover:border-neutral-400 transition-colors cursor-pointer group bg-neutral-50/30"
+                                        icon={
+                                            <div className="p-3 bg-neutral-100 rounded-xl group-hover:bg-neutral-200 transition-colors">
+                                                <Upload className="h-6 w-6 text-neutral-400 group-hover:text-neutral-600" />
+                                            </div>
+                                        }
+                                    />
+                                )}
+                            </div>
+
+                            <div className="space-y-4">
+                                <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Featured Video</label>
+
+                                {formData.videoUrl ? (
+                                    <div className="relative group rounded-2xl overflow-hidden border border-neutral-200">
+                                        <div className="aspect-video relative bg-neutral-100">
+                                            <video
+                                                src={formData.videoUrl}
+                                                controls
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                <UploadButton
+                                                    label="Change Video"
+                                                    onUpload={(url) => setFormData({ ...formData, videoUrl: url })}
+                                                    showGalleryUpload={false}
+                                                    className="bg-white text-neutral-900 px-4 py-2 rounded-full text-xs font-bold hover:bg-neutral-100 transition-colors"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, videoUrl: "" })}
+                                                    className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </div>
-                                    }
-                                />
-                            )}
+                                    </div>
+                                ) : (
+                                    <UploadButton
+                                        onUpload={(url) => setFormData({ ...formData, videoUrl: url })}
+                                        showGalleryUpload={false}
+                                        label="Upload Featured Video"
+                                        className="w-full border-2 border-dashed border-neutral-200 rounded-2xl p-10 flex flex-col items-center justify-center gap-3 hover:border-neutral-400 transition-colors cursor-pointer group bg-neutral-50/30"
+                                        icon={
+                                            <div className="p-3 bg-neutral-100 rounded-xl group-hover:bg-neutral-200 transition-colors">
+                                                <Upload className="h-6 w-6 text-neutral-400 group-hover:text-neutral-600" />
+                                            </div>
+                                        }
+                                    />
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -14,7 +14,17 @@ const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number })
         <Link href={`/case-studies/${caseStudy.slug}`} className="group cursor-pointer shrink-0 w-[85vw] md:w-[45vw] lg:w-[40vw] block">
             <div className="relative aspect-video overflow-hidden bg-neutral-100 mb-6 rounded-sm">
                 <div className="absolute inset-0 bg-neutral-200 group-hover:scale-105 transition-transform duration-700 ease-out" />
-                {caseStudy.imageUrl ? (
+                {(caseStudy as any).videoUrl ? (
+                    <video
+                        src={(caseStudy as any).videoUrl}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        muted
+                        loop
+                        autoPlay
+                        playsInline
+                        poster={caseStudy.imageUrl || undefined}
+                    />
+                ) : caseStudy.imageUrl ? (
                     <img
                         src={caseStudy.imageUrl}
                         alt={caseStudy.title}

@@ -12,6 +12,7 @@ export async function createCaseStudy(data: {
     githubLink?: string;
     liveLink?: string;
     image: string;
+    videoUrl?: string;
 }) {
     try {
         const caseStudy = await prisma.caseStudy.create({
@@ -24,6 +25,7 @@ export async function createCaseStudy(data: {
                 githubLink: data.githubLink,
                 liveLink: data.liveLink,
                 imageUrl: data.image,
+                videoUrl: data.videoUrl,
             },
         });
 
@@ -45,6 +47,7 @@ export async function updateCaseStudy(id: string, data: {
     githubLink?: string;
     liveLink?: string;
     image: string;
+    videoUrl?: string;
 }) {
     try {
         const caseStudy = await prisma.caseStudy.update({
@@ -58,6 +61,7 @@ export async function updateCaseStudy(id: string, data: {
                 githubLink: data.githubLink,
                 liveLink: data.liveLink,
                 imageUrl: data.image,
+                videoUrl: data.videoUrl,
             },
         });
 
