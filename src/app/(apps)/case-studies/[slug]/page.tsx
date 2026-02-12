@@ -116,11 +116,12 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                         <div className="mb-6">
                             <div className="relative aspect-21/9 w-full bg-neutral-50 border border-neutral-100">
                                 <Image
-                                    src={getOptimizedUrl(project.imageUrl)}
+                                    src={getOptimizedUrl(project.imageUrl, { width: 1920 })}
                                     alt={project.title}
                                     fill
                                     className="object-cover transition-all duration-700"
                                     priority
+                                    sizes="(max-width: 1536px) 100vw, 1536px"
                                 />
                             </div>
                         </div>

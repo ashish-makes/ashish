@@ -98,7 +98,7 @@ export async function getCaseStudies() {
                 visibility: 'public'
             },
             orderBy: {
-                createdAt: 'desc'
+                createdAt: 'asc'
             }
         });
         return { success: true, caseStudies };

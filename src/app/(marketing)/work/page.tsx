@@ -44,7 +44,7 @@ export default async function WorkPage() {
             visibility: 'public'
         },
         orderBy: {
-            createdAt: 'desc'
+            createdAt: 'asc'
         }
     });
 
@@ -115,19 +115,21 @@ export default async function WorkPage() {
                                         <div className="relative aspect-16/10 overflow-hidden bg-neutral-50 mb-6 rounded-sm">
                                             {project.videoUrl ? (
                                                 <video
-                                                    src={getOptimizedUrl(project.videoUrl)}
+                                                    src={getOptimizedUrl(project.videoUrl, { width: 1280 })}
                                                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                                                     muted
                                                     loop
                                                     autoPlay
                                                     playsInline
-                                                    poster={getOptimizedUrl(project.imageUrl) || undefined}
+                                                    preload="metadata"
+                                                    poster={getOptimizedUrl(project.imageUrl, { width: 1280 }) || undefined}
                                                 />
                                             ) : project.imageUrl ? (
                                                 <img
-                                                    src={getOptimizedUrl(project.imageUrl)}
+                                                    src={getOptimizedUrl(project.imageUrl, { width: 1280 })}
                                                     alt={project.title}
                                                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                                    loading={i < 2 ? "eager" : "lazy"}
                                                 />
 
                                             ) : (

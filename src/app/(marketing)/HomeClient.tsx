@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { CaseStudy } from '@prisma/client';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { getOptimizedUrl } from '@/lib/cloudinary';
+import Image from 'next/image';
 
 
 const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number }) => {
@@ -18,19 +19,21 @@ const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number })
                 <div className="absolute inset-0 bg-neutral-200 group-hover:scale-105 transition-transform duration-700 ease-out" />
                 {(caseStudy as any).videoUrl ? (
                     <video
-                        src={getOptimizedUrl((caseStudy as any).videoUrl)}
+                        src={getOptimizedUrl((caseStudy as any).videoUrl, { width: 1280 })}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         muted
                         loop
                         autoPlay
                         playsInline
-                        poster={getOptimizedUrl(caseStudy.imageUrl) || undefined}
+                        preload="metadata"
+                        poster={getOptimizedUrl(caseStudy.imageUrl, { width: 1280 }) || undefined}
                     />
                 ) : caseStudy.imageUrl ? (
                     <img
-                        src={getOptimizedUrl(caseStudy.imageUrl)}
+                        src={getOptimizedUrl(caseStudy.imageUrl, { width: 1280 })}
                         alt={caseStudy.title}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        loading={index < 2 ? "eager" : "lazy"}
                     />
 
                 ) : (
@@ -126,6 +129,7 @@ const EmailCopyButton = () => {
             whileTap={{ scale: 0.95 }}
             className="relative flex items-center justify-center w-9 h-9 rounded-full bg-neutral-50 border border-neutral-100 text-neutral-500 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors duration-300"
             title={copied ? 'Copied!' : 'Copy email'}
+            aria-label={copied ? 'Email copied' : 'Copy email address ashindia.003@gmail.com'}
         >
             <AnimatePresence mode="wait">
                 {copied ? (
@@ -552,10 +556,13 @@ export default function HomeClient({ caseStudies }: { caseStudies: CaseStudy[] }
                                     exit={{ clipPath: 'circle(0% at 50% 100%)' }}
                                     transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
                                 >
-                                    <img
+                                    <Image
                                         src="/ashish.jpeg"
                                         alt="Ashish"
+                                        width={224}
+                                        height={224}
                                         className="w-full h-full object-cover"
+                                        priority
                                     />
                                 </motion.div>
                             </motion.div>
@@ -668,6 +675,7 @@ export default function HomeClient({ caseStudies }: { caseStudies: CaseStudy[] }
                                 <button
                                     onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
                                     className="group flex items-center justify-center w-10 h-10 rounded-full bg-white border border-neutral-100 hover:bg-neutral-900 hover:border-neutral-900 transition-all duration-500 shadow-sm relative z-10"
+                                    aria-label="Scroll down to projects"
                                 >
                                     <svg
                                         className="w-3.5 h-3.5 text-neutral-600 group-hover:text-white transition-colors duration-300 transform group-hover:translate-y-0.5"

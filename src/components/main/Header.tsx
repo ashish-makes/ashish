@@ -147,6 +147,7 @@ export default function Header() {
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setIsChatOpen(true)}
                                 className="flex items-center gap-2 px-3 py-2 -mr-2 cursor-pointer group"
+                                aria-label="Open AI assistant"
                             >
                                 <TextShimmer className='text-sm uppercase tracking-widest' duration={1}>Ask AI</TextShimmer>
                                 <Sparkles className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 transition-colors" />
@@ -157,6 +158,7 @@ export default function Header() {
                                 whileHover="hover"
                                 className="flex items-center gap-3 p-2 -mr-2 rounded-full cursor-pointer"
                                 onClick={() => setFullMenuOpen(true)}
+                                aria-label="Open navigation menu"
                             >
                                 <motion.span
                                     variants={{
@@ -230,6 +232,7 @@ export default function Header() {
                             <button
                                 className="group flex items-center gap-4 hover:opacity-70 transition-opacity"
                                 onClick={() => setFullMenuOpen(false)}
+                                aria-label="Close navigation menu"
                             >
                                 <span className="text-sm font-bold uppercase tracking-widest">Close</span>
                                 <div className="relative w-8 h-8 flex items-center justify-center">
