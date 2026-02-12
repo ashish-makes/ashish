@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { TextAnimate } from '@/components/ui/text-animate';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { getOptimizedUrl } from '@/lib/cloudinary';
+
 
 export const revalidate = 0;
 
@@ -27,7 +29,9 @@ const iconMap: Record<string, string> = {
     'Vanilla JS': 'https://svgl.app/library/javascript.svg'
 };
 
+import { TechIcon } from '@/components/ui/TechIcon';
 import JsonLd from '@/components/seo/JsonLd';
+
 
 export const metadata: Metadata = {
     title: "Work",
@@ -111,20 +115,21 @@ export default async function WorkPage() {
                                         <div className="relative aspect-16/10 overflow-hidden bg-neutral-50 mb-6 rounded-sm">
                                             {project.videoUrl ? (
                                                 <video
-                                                    src={project.videoUrl}
+                                                    src={getOptimizedUrl(project.videoUrl)}
                                                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                                                     muted
                                                     loop
                                                     autoPlay
                                                     playsInline
-                                                    poster={project.imageUrl || undefined}
+                                                    poster={getOptimizedUrl(project.imageUrl) || undefined}
                                                 />
                                             ) : project.imageUrl ? (
                                                 <img
-                                                    src={project.imageUrl}
+                                                    src={getOptimizedUrl(project.imageUrl)}
                                                     alt={project.title}
                                                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                                                 />
+
                                             ) : (
                                                 <div className="absolute inset-0 flex items-center justify-center opacity-10 blur-3xl group-hover:opacity-20 transition-opacity duration-700 bg-neutral-900" />
                                             )}
@@ -140,7 +145,7 @@ export default async function WorkPage() {
                                         {/* Project Info */}
                                         <div className="flex flex-col">
                                             <div className="flex items-center justify-between mb-2">
-                                                <h3 className="text-2xl md:text-4xl font-bold tracking-tight group-hover:translate-x-1 transition-transform duration-500">
+                                                <h3 className="text-2xl md:text-4xl font-bold tracking-tight group-hover:translate-x-1 transition-transform duration-500 line-clamp-2">
                                                     {project.title}
                                                 </h3>
                                                 <span className="text-[10px] font-mono text-neutral-300">
@@ -166,15 +171,13 @@ export default async function WorkPage() {
                                                         className="flex items-center gap-2 px-2.5 py-1.5 bg-neutral-50 border border-neutral-100 rounded-full text-[10px] font-bold uppercase tracking-widest text-neutral-500"
                                                     >
                                                         {iconMap[tag] && (
-                                                            <img
+                                                            <TechIcon
                                                                 src={iconMap[tag]}
                                                                 alt={tag}
                                                                 className="w-3 h-3 object-contain"
-                                                                onError={(e) => {
-                                                                    (e.target as HTMLImageElement).style.display = 'none';
-                                                                }}
                                                             />
                                                         )}
+
                                                         {tag}
                                                     </span>
                                                 ))}

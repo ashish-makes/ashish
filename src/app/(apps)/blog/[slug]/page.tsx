@@ -13,6 +13,8 @@ import ShareButton from '@/components/blog/ShareButton';
 import TableOfContents from "@/components/blog/TableOfContents";
 import JsonLd from '@/components/seo/JsonLd';
 import { Metadata } from 'next';
+import { getOptimizedUrl } from '@/lib/cloudinary';
+
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -120,7 +122,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                         <div className="mb-6">
                             <div className="relative aspect-[21/9] w-full bg-neutral-50 border border-neutral-100">
                                 <Image
-                                    src={post.imageUrl}
+                                    src={getOptimizedUrl(post.imageUrl)}
                                     alt={post.title}
                                     fill
                                     className="object-cover grayscale hover:grayscale-0 transition-all duration-700"

@@ -4,6 +4,8 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import { stripHtml } from '@/lib/utils';
+import { getOptimizedUrl } from '@/lib/cloudinary';
+
 
 interface BlogPost {
     id: string;
@@ -79,7 +81,7 @@ const BlogList = ({ posts }: BlogListProps) => {
                             {post.imageUrl && (
                                 <div className="aspect-video w-full overflow-hidden mb-6 bg-neutral-100 rounded-none">
                                     <img
-                                        src={post.imageUrl}
+                                        src={getOptimizedUrl(post.imageUrl)}
                                         alt={post.title}
                                         className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
                                     />

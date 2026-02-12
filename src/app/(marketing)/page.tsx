@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
+import { Preloader } from '@/components/layout/Preloader';
+
 export default async function Page() {
   const result = await getCaseStudies();
   const caseStudies = result.success && result.caseStudies ? result.caseStudies : [];
@@ -37,6 +39,7 @@ export default async function Page() {
 
   return (
     <>
+      <Preloader />
       <JsonLd data={personSchema} />
       <JsonLd data={websiteSchema} />
       <HomeClient caseStudies={caseStudies} />

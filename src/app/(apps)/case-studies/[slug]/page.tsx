@@ -10,6 +10,8 @@ import BlogContent from "@/components/blog/BlogContent";
 import { TextAnimate } from '@/components/ui/text-animate';
 import { Metadata } from 'next';
 import JsonLd from '@/components/seo/JsonLd';
+import { getOptimizedUrl } from '@/lib/cloudinary';
+
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -76,12 +78,12 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                                     </Link>
                                 </div>
 
-                                <div className="relative">
+                                <div className="relative max-w-[95%] lg:max-w-[85%]">
                                     <TextAnimate
                                         animation="blurInUp"
-                                        by="character"
+                                        by="word"
                                         once={true}
-                                        className="relative z-10 text-7xl md:text-[10vw] tracking-tighter leading-[0.8]"
+                                        className="relative z-10 text-5xl md:text-[clamp(3.5rem,8vw,8rem)] tracking-tighter leading-[0.95] md:leading-[0.85]"
                                     >
                                         {project.title + "."}
                                     </TextAnimate>
@@ -114,10 +116,10 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                         <div className="mb-6">
                             <div className="relative aspect-21/9 w-full bg-neutral-50 border border-neutral-100">
                                 <Image
-                                    src={project.imageUrl}
+                                    src={getOptimizedUrl(project.imageUrl)}
                                     alt={project.title}
                                     fill
-                                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                    className="object-cover transition-all duration-700"
                                     priority
                                 />
                             </div>

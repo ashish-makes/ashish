@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { TextShimmer } from '../motion-primitives/text-shimmer';
 import { TextAnimate } from '../ui/text-animate';
 import { ChatContactCard } from './ChatContactCard';
+import { ChatResumeCard } from './ChatResumeCard';
+import { ResumeLoader } from './ResumeLoader';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -14,6 +16,7 @@ interface Message {
     role: 'user' | 'assistant';
     content: string;
     timestamp: Date;
+    isResumeAnimated?: boolean;
 }
 
 interface AIChatSidebarProps {
@@ -25,7 +28,8 @@ const SUGGESTED_PROMPTS = [
     "Tell me about Ashish's background",
     "What is his design philosophy?",
     "Show me his latest projects",
-    "How can I contact him?"
+    "How can I contact him?",
+    "Can I get his resume?"
 ];
 
 export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
@@ -57,6 +61,12 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
             setTimeout(() => inputRef.current?.focus(), 500);
         }
     }, [isOpen]);
+
+    const handleResumeAnimationComplete = (messageId: string) => {
+        setMessages(prev => prev.map(msg =>
+            msg.id === messageId ? { ...msg, isResumeAnimated: true } : msg
+        ));
+    };
 
     const handleSendMessage = async (e?: React.FormEvent) => {
         e?.preventDefault();
@@ -98,7 +108,8 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
                 content: data.content,
-                timestamp: new Date()
+                timestamp: new Date(),
+                isResumeAnimated: false // Initialize as false
             };
 
             setMessages(prev => [...prev, aiResponse]);
@@ -180,35 +191,54 @@ export default function AIChatSidebar({ isOpen, onClose }: AIChatSidebarProps) {
                                         </span>
                                     </div>
                                     <div className={cn(
-                                        "text-sm leading-relaxed relative px-5 py-4 rounded-[4px]",
+                                        "text-sm leading-relaxed relative rounded-[4px]",
                                         message.role === 'assistant'
-                                            ? "bg-neutral-50/50 border border-neutral-100 text-neutral-600 font-light"
-                                            : "bg-neutral-950 text-white font-medium"
+                                            ? (message.content.includes('[[RESUME_Action]]') ? "p-0" : "px-5 py-4 bg-neutral-50/50 border border-neutral-100 text-neutral-600 font-light")
+                                            : "px-5 py-4 bg-neutral-950 text-white font-medium"
                                     )}>
                                         {message.role === 'assistant' ? (
                                             <>
-                                                <div className="markdown-container text-sm leading-relaxed">
-                                                    <ReactMarkdown
-                                                        components={{
-                                                            p: ({ node, ...props }: any) => <p className="mb-2 last:mb-0" {...props} />,
-                                                            ul: ({ node, ...props }: any) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
-                                                            ol: ({ node, ...props }: any) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
-                                                            li: ({ node, ...props }: any) => <li className="pl-1" {...props} />,
-                                                            strong: ({ node, ...props }: any) => <span className="font-bold text-neutral-900" {...props} />,
-                                                            a: ({ node, ...props }: any) => <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
-                                                        }}
-                                                    >
-                                                        {message.content.replace('[[CONTACT_CARD]]', '')}
-                                                    </ReactMarkdown>
-                                                </div>
-                                                {message.content.includes('[[CONTACT_CARD]]') && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, y: 10 }}
-                                                        animate={{ opacity: 1, y: 0 }}
-                                                        transition={{ delay: 0.5 }}
-                                                    >
-                                                        <ChatContactCard />
-                                                    </motion.div>
+                                                {/* Resume Logic */}
+                                                {message.content.includes('[[RESUME_Action]]') ? (
+                                                    <>
+                                                        {!message.isResumeAnimated ? (
+                                                            <ResumeLoader onComplete={() => handleResumeAnimationComplete(message.id)} />
+                                                        ) : (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 10 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                            >
+                                                                <ChatResumeCard />
+                                                            </motion.div>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    // Standard Message Logic
+                                                    <>
+                                                        <div className="markdown-container text-sm leading-relaxed">
+                                                            <ReactMarkdown
+                                                                components={{
+                                                                    p: ({ node, ...props }: any) => <p className="mb-2 last:mb-0" {...props} />,
+                                                                    ul: ({ node, ...props }: any) => <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />,
+                                                                    ol: ({ node, ...props }: any) => <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />,
+                                                                    li: ({ node, ...props }: any) => <li className="pl-1" {...props} />,
+                                                                    strong: ({ node, ...props }: any) => <span className="font-bold text-neutral-900" {...props} />,
+                                                                    a: ({ node, ...props }: any) => <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
+                                                                }}
+                                                            >
+                                                                {message.content.replace('[[CONTACT_CARD]]', '')}
+                                                            </ReactMarkdown>
+                                                        </div>
+                                                        {message.content.includes('[[CONTACT_CARD]]') && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: 10 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                transition={{ delay: 0.5 }}
+                                                            >
+                                                                <ChatContactCard />
+                                                            </motion.div>
+                                                        )}
+                                                    </>
                                                 )}
                                             </>
                                         ) : (

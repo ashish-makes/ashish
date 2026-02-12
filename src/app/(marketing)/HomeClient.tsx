@@ -8,6 +8,8 @@ import Footer from '@/components/main/Footer';
 import Link from 'next/link';
 import { CaseStudy } from '@prisma/client';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { getOptimizedUrl } from '@/lib/cloudinary';
+
 
 const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number }) => {
     return (
@@ -16,20 +18,21 @@ const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number })
                 <div className="absolute inset-0 bg-neutral-200 group-hover:scale-105 transition-transform duration-700 ease-out" />
                 {(caseStudy as any).videoUrl ? (
                     <video
-                        src={(caseStudy as any).videoUrl}
+                        src={getOptimizedUrl((caseStudy as any).videoUrl)}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         muted
                         loop
                         autoPlay
                         playsInline
-                        poster={caseStudy.imageUrl || undefined}
+                        poster={getOptimizedUrl(caseStudy.imageUrl) || undefined}
                     />
                 ) : caseStudy.imageUrl ? (
                     <img
-                        src={caseStudy.imageUrl}
+                        src={getOptimizedUrl(caseStudy.imageUrl)}
                         alt={caseStudy.title}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
+
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center text-neutral-400 font-medium whitespace-nowrap overflow-hidden">
                         <span className="text-xs uppercase tracking-[0.2em] font-bold opacity-30">No Image</span>
@@ -38,7 +41,7 @@ const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number })
             </div>
             <div className="flex items-start justify-between">
                 <div className="max-w-[70%]">
-                    <h3 className="text-xl md:text-2xl font-bold text-neutral-900 mb-1 leading-tight group-hover:text-neutral-600 transition-colors">
+                    <h3 className="text-xl md:text-2xl font-bold text-neutral-900 mb-1 leading-tight group-hover:text-neutral-600 transition-colors line-clamp-2">
                         {caseStudy.title}
                     </h3>
                     <p className="text-xs md:text-base text-neutral-500 font-medium tracking-tight">
@@ -77,10 +80,6 @@ const HorizontalWork = ({ caseStudies }: { caseStudies: CaseStudy[] }) => {
 
     const isMobile = windowWidth < 768;
     const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-76%" : "-60%"]);
-
-    if (caseStudies.length === 0) {
-        return null;
-    }
 
     return (
         <section id="work" ref={targetRef} data-scroll-section className="relative h-[400vh] bg-white">
@@ -642,27 +641,51 @@ export default function HomeClient({ caseStudies }: { caseStudies: CaseStudy[] }
                         </div>
 
                         {/* Scroll Button */}
-                        <Magnetic>
-                            <button
-                                onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-                                className="group flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border border-neutral-200 hover:bg-neutral-900 hover:border-neutral-900 transition-all duration-500 shadow-sm"
+                        <div className="relative flex items-center justify-center">
+                            {/* Rotating Text Ring */}
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0 w-[66px] h-[66px] -m-[13px] pointer-events-none" // Adjusted size and margin to center around the 40px button
                             >
-                                <svg
-                                    className="w-4 h-4 md:w-5 md:h-5 text-neutral-600 group-hover:text-white transition-colors duration-300 transform group-hover:translate-y-1"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                <svg viewBox="0 0 100 100" className="w-full h-full">
+                                    <defs>
+                                        <path
+                                            id="circlePath"
+                                            d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+                                        />
+                                    </defs>
+                                    <text className="text-[10px] font-bold uppercase tracking-[0.2em] fill-neutral-300">
+                                        <textPath href="#circlePath" startOffset="0%">
+                                            Scroll Down • Scroll Down •
+                                        </textPath>
+                                    </text>
                                 </svg>
-                            </button>
-                        </Magnetic>
+                            </motion.div>
+
+                            {/* Button */}
+                            <Magnetic>
+                                <button
+                                    onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+                                    className="group flex items-center justify-center w-10 h-10 rounded-full bg-white border border-neutral-100 hover:bg-neutral-900 hover:border-neutral-900 transition-all duration-500 shadow-sm relative z-10"
+                                >
+                                    <svg
+                                        className="w-3.5 h-3.5 text-neutral-600 group-hover:text-white transition-colors duration-300 transform group-hover:translate-y-0.5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    </svg>
+                                </button>
+                            </Magnetic>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Selected Work Section - Horizontal Scroll */}
-            <HorizontalWork caseStudies={caseStudies} />
+            {caseStudies.length > 0 && <HorizontalWork caseStudies={caseStudies} />}
 
             {/* Experience Section */}
             <Experience />

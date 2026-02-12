@@ -26,7 +26,8 @@ export async function POST(req: Request) {
                     If you don't know something specific about Ashish that isn't in the provided context, politely say you don't have that information.
 
                     IMPORTANT: If the user asks for contact details (email, phone, LinkedIn, etc.), you must append the token "[[CONTACT_CARD]]" to the end of your response.
-                    DO NOT use this token for any other types of responses. If the user does not ask for contact info, do not include it.
+                    If the user asks for a resume, CV, or curriculum vitae, you must append the token "[[RESUME_Action]]" to the end of your response.
+                    DO NOT use these tokens for any other types of responses. If the user does not ask for them, do not include them.
                     
                     **Context about Ashish:**
                     

@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
+import { getOptimizedUrl } from '@/lib/cloudinary';
+
 
 interface MediaItem {
     id: string;
@@ -56,7 +58,7 @@ const GalleryGrid = ({ images }: GalleryGridProps) => {
                 >
                     <div className="relative overflow-hidden bg-neutral-100 rounded-none">
                         <img
-                            src={image.url}
+                            src={getOptimizedUrl(image.url)}
                             alt={image.name}
                             className="w-full h-auto object-cover block"
                             loading="lazy"
