@@ -15,6 +15,13 @@ import JsonLd from '@/components/seo/JsonLd';
 import { Metadata } from 'next';
 import { getOptimizedUrl } from '@/lib/cloudinary';
 
+export async function generateStaticParams() {
+    const posts = await prisma.blog.findMany({
+        where: { status: 'published' },
+        select: { slug: true },
+    });
+    return posts.map((post) => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -31,12 +38,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: post.title,
         description: post.content.substring(0, 160) + "...",
+        alternates: {
+            canonical: `/blog/${slug}`,
+        },
         openGraph: {
             title: `${post.title} | Ashish`,
             description: post.content.substring(0, 160) + "...",
+            url: `https://ashish.cv/blog/${slug}`,
             images: post.imageUrl ? [{ url: post.imageUrl }] : [],
             type: 'article',
             publishedTime: post.createdAt.toISOString(),
+            modifiedTime: post.updatedAt?.toISOString(),
             authors: ['Ashish'],
         },
     };
@@ -60,6 +72,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         "image": post.imageUrl ? [post.imageUrl] : [],
         "datePublished": post.createdAt.toISOString(),
         "dateModified": post.updatedAt ? post.updatedAt.toISOString() : post.createdAt.toISOString(),
+        "wordCount": post.content.split(/\s+/).length,
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://ashish.cv/blog/${slug}`
+        },
         "author": [{
             "@type": "Person",
             "name": "Ashish",
@@ -67,9 +84,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         }]
     };
 
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ashish.cv" },
+            { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ashish.cv/blog" },
+            { "@type": "ListItem", "position": 3, "name": post.title, "item": `https://ashish.cv/blog/${slug}` }
+        ]
+    };
+
     return (
         <>
             <JsonLd data={blogSchema} />
+            <JsonLd data={breadcrumbSchema} />
             <main className="min-h-screen bg-white text-neutral-950 font-bricolage selection:bg-neutral-950 selection:text-white">
                 <Header />
 

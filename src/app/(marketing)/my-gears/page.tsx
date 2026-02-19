@@ -1,9 +1,18 @@
 import { Metadata } from 'next';
 import GearsClient from './GearsClient';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
     title: "My Gears",
     description: "A professional collection of hardware and software tools used by Ashish for creative design and technical development.",
+    openGraph: {
+        title: "My Gears | Ashish",
+        description: "A professional collection of hardware and software tools used by Ashish for creative design and technical development.",
+        url: "https://ashish.cv/my-gears",
+    },
+    alternates: {
+        canonical: "/my-gears",
+    },
 };
 
 const categories = [
@@ -102,5 +111,19 @@ const categories = [
 ];
 
 export default function Page() {
-    return <GearsClient categories={categories} />;
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ashish.cv" },
+            { "@type": "ListItem", "position": 2, "name": "My Gears", "item": "https://ashish.cv/my-gears" }
+        ]
+    };
+
+    return (
+        <>
+            <JsonLd data={breadcrumbSchema} />
+            <GearsClient categories={categories} />
+        </>
+    );
 }

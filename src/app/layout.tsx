@@ -16,13 +16,25 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ashish.cv"),
   title: {
-    default: "Ashish • Creative technologist & designer",
+    default: "Ashish • Software Developer",
     template: "%s | Ashish"
   },
-  description: "Creative portfolio of Ashish, a UI/UX designer and technologist focused on building digital experiences that bridge precision and emotion.",
+  description: "Creative portfolio of Ashish, a software developer focused on building digital experiences that bridge precision and emotion.",
+  keywords: [
+    "Ashish", "software developer", "portfolio",
+    "web developer", "Next.js developer",
+    "React developer", "full stack developer", "frontend engineer",
+    "digital experiences", "case studies", "web design"
+  ],
+  authors: [{ name: "Ashish", url: "https://ashish.cv" }],
+  creator: "Ashish",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Ashish • Creative technologist & designer",
+    title: "Ashish • Software Developer",
     description: "Creative portfolio of Ashish, showcasing work at the intersection of design and engineering.",
     url: "https://ashish.cv",
     siteName: "Ashish Portfolio",
@@ -31,13 +43,20 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ashish",
-    description: "Software Developer.",
+    title: "Ashish • Software Developer",
+    description: "Creative portfolio of Ashish, showcasing work at the intersection of design and engineering.",
     creator: "@ashish_makes",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

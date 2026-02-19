@@ -12,6 +12,13 @@ import { Metadata } from 'next';
 import JsonLd from '@/components/seo/JsonLd';
 import { getOptimizedUrl } from '@/lib/cloudinary';
 
+export async function generateStaticParams() {
+    const projects = await prisma.caseStudy.findMany({
+        where: { visibility: 'public' },
+        select: { slug: true },
+    });
+    return projects.map((project) => ({ slug: project.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -28,9 +35,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: project.title,
         description: project.description.substring(0, 160) + "...",
+        alternates: {
+            canonical: `/case-studies/${slug}`,
+        },
         openGraph: {
             title: `${project.title} | Ashish`,
             description: project.description.substring(0, 160) + "...",
+            url: `https://ashish.cv/case-studies/${slug}`,
             images: project.imageUrl ? [{ url: project.imageUrl }] : [],
         },
     };
@@ -54,15 +65,30 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         "description": project.description.substring(0, 160) + "...",
         "image": project.imageUrl ? [project.imageUrl] : [],
         "url": `https://ashish.cv/case-studies/${project.slug}`,
+        "datePublished": project.createdAt.toISOString(),
+        "dateModified": project.updatedAt.toISOString(),
+        "keywords": project.techStack.join(", "),
         "author": {
             "@type": "Person",
-            "name": "Ashish"
+            "name": "Ashish",
+            "url": "https://ashish.cv"
         }
+    };
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ashish.cv" },
+            { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://ashish.cv/work" },
+            { "@type": "ListItem", "position": 3, "name": project.title, "item": `https://ashish.cv/case-studies/${project.slug}` }
+        ]
     };
 
     return (
         <>
             <JsonLd data={projectSchema} />
+            <JsonLd data={breadcrumbSchema} />
             <main className="min-h-screen bg-white text-neutral-950 font-bricolage selection:bg-neutral-950 selection:text-white">
                 <Header />
 

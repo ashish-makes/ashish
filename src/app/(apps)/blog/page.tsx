@@ -13,6 +13,14 @@ export const revalidate = 0;
 export const metadata: Metadata = {
     title: "Blog",
     description: "Perspectives on engineering, design systems, and the intersection of technology and human experience.",
+    openGraph: {
+        title: "Blog | Ashish",
+        description: "Perspectives on engineering, design systems, and the intersection of technology and human experience.",
+        url: "https://ashish.cv/blog",
+    },
+    alternates: {
+        canonical: "/blog",
+    },
 };
 
 export default async function BlogPage() {
@@ -43,6 +51,14 @@ export default async function BlogPage() {
     return (
         <>
             <JsonLd data={blogListSchema} />
+            <JsonLd data={{
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ashish.cv" },
+                    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://ashish.cv/blog" }
+                ]
+            }} />
             <main className="min-h-screen bg-white text-neutral-950 font-bricolage selection:bg-neutral-950 selection:text-white">
                 <Header />
 

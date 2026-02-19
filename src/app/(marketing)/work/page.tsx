@@ -36,6 +36,14 @@ import JsonLd from '@/components/seo/JsonLd';
 export const metadata: Metadata = {
     title: "Work",
     description: "A showcase of selected UI/UX design and development projects, exploring the boundary between digital precision and human experience.",
+    openGraph: {
+        title: "Work | Ashish",
+        description: "A showcase of selected UI/UX design and development projects, exploring the boundary between digital precision and human experience.",
+        url: "https://ashish.cv/work",
+    },
+    alternates: {
+        canonical: "/work",
+    },
 };
 
 export default async function WorkPage() {
@@ -68,9 +76,19 @@ export default async function WorkPage() {
         }
     };
 
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ashish.cv" },
+            { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://ashish.cv/work" }
+        ]
+    };
+
     return (
         <>
             <JsonLd data={workSchema} />
+            <JsonLd data={breadcrumbSchema} />
             <main className="min-h-screen bg-white text-neutral-950 font-bricolage selection:bg-neutral-950 selection:text-white">
                 {/* Header Section */}
                 <section className="pt-32 pb-16 px-6 lg:px-12 border-b border-neutral-100">
