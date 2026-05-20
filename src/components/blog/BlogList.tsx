@@ -35,16 +35,14 @@ const BlogList = ({ posts }: BlogListProps) => {
     const itemVariants: Variants = {
         hidden: {
             opacity: 0,
-            filter: "blur(20px)",
-            y: 40
+            y: 24
         },
         visible: (i: number) => ({
             opacity: 1,
-            filter: "blur(0px)",
             y: 0,
             transition: {
-                duration: 1,
-                delay: i * 0.1,
+                duration: 0.5,
+                delay: i * 0.08,
                 ease: [0.16, 1, 0.3, 1]
             }
         })
@@ -81,9 +79,11 @@ const BlogList = ({ posts }: BlogListProps) => {
                             {post.imageUrl && (
                                 <div className="aspect-video w-full overflow-hidden mb-6 bg-neutral-100 rounded-none">
                                     <img
-                                        src={getOptimizedUrl(post.imageUrl)}
+                                        src={getOptimizedUrl(post.imageUrl, { width: 800 })}
                                         alt={post.title}
-                                        className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
+                                        loading={i < 3 ? "eager" : "lazy"}
+                                        decoding="async"
+                                        className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
                                     />
                                 </div>
                             )}

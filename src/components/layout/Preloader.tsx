@@ -14,16 +14,12 @@ export const Preloader = () => {
             setCounter((prev) => {
                 if (prev >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => setIsLoading(false), 500);
+                    setTimeout(() => setIsLoading(false), 200);
                     return 100;
                 }
-                const speed =
-                    prev < 30 ? Math.floor(Math.random() * 6) + 3 :
-                        prev < 70 ? Math.floor(Math.random() * 4) + 2 :
-                            Math.floor(Math.random() * 2) + 1;
-                return Math.min(prev + speed, 100);
+                return Math.min(prev + 10, 100);
             });
-        }, 55);
+        }, 30);
 
         return () => clearInterval(interval);
     }, []);

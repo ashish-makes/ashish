@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import hljs from 'highlight.js';
 
 interface BlogContentProps {
     content: string;
@@ -23,13 +22,17 @@ export default function BlogContent({ content }: BlogContentProps) {
             heading.id = id;
         });
 
-        // 1. Run highlighting
+        // 1. Run highlighting — only load hljs if code blocks exist
         const blocks = document.querySelectorAll('.rich-text-content pre code');
-        blocks.forEach((block) => {
-            if (block.getAttribute('data-highlighted')) return;
-            hljs.highlightElement(block as HTMLElement);
-            block.setAttribute('data-highlighted', 'true');
-        });
+        if (blocks.length > 0) {
+            import('highlight.js').then(({ default: hljs }) => {
+                blocks.forEach((block) => {
+                    if (block.getAttribute('data-highlighted')) return;
+                    hljs.highlightElement(block as HTMLElement);
+                    block.setAttribute('data-highlighted', 'true');
+                });
+            });
+        }
 
         // 2. Add animated copy button and wrap pre in a container for fixed positioning
         const preElements = document.querySelectorAll('.rich-text-content pre');

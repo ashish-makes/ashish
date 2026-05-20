@@ -106,7 +106,7 @@ const GearsClient = ({ categories }: { categories: any[] }) => {
                                         custom={i}
                                         initial="hidden"
                                         whileInView="visible"
-                                        viewport={{ once: false, amount: 0.2, margin: "-5% 0px" }}
+                                        viewport={{ once: true, amount: 0.2, margin: "-5% 0px" }}
                                         variants={itemVariants}
                                         className="group flex flex-col justify-between p-8 bg-white border border-neutral-100 rounded-sm hover:border-neutral-900 transition-colors duration-500"
                                     >
@@ -117,6 +117,9 @@ const GearsClient = ({ categories }: { categories: any[] }) => {
                                                         <img
                                                             src={`https://cdn.simpleicons.org/${iconSlug}`}
                                                             alt={item.brand}
+                                                            loading="lazy"
+                                                            width={20}
+                                                            height={20}
                                                             className="w-5 h-5 object-contain group-hover:invert transition-all"
                                                         />
                                                     ) : (

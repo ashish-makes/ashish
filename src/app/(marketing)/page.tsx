@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Explore the creative portfolio of Ashish, a software developer building unique digital experiences.",
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 import { Preloader } from '@/components/layout/Preloader';
 

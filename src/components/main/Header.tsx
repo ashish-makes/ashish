@@ -7,57 +7,20 @@ import { Sparkles } from 'lucide-react';
 import AIChatSidebar from '../chat/AIChatSidebar';
 import { TextShimmer } from '../motion-primitives/text-shimmer';
 
-// Animated digit component for the clock with blur fade effect
-const AnimatedDigit = ({ digit }: { digit: string }) => (
-    <div className="relative h-4 w-[0.6em] overflow-hidden">
-        <AnimatePresence mode="popLayout">
-            <motion.span
-                key={digit}
-                initial={{ opacity: 0, filter: "blur(8px)", y: 8 }}
-                animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                exit={{ opacity: 0, filter: "blur(8px)", y: -8 }}
-                transition={{
-                    duration: 0.25,
-                    ease: [0.25, 0.1, 0.25, 1],
-                    opacity: { duration: 0.2 },
-                    filter: { duration: 0.25 }
-                }}
-                className="absolute inset-0 flex items-center justify-center"
-            >
-                {digit}
-            </motion.span>
-        </AnimatePresence>
-    </div>
-);
-
-// Real-time animated clock component
+// Real-time clock component (minutes precision, no per-second rerenders)
 const AnimatedClock = ({ time }: { time: Date }) => {
     const hours = time.getHours();
     const minutes = time.getMinutes();
-    const seconds = time.getSeconds();
     const ampm = hours >= 12 ? 'PM' : 'AM';
 
     const hour12 = hours % 12 || 12;
     const hourStr = hour12.toString().padStart(2, '0');
     const minStr = minutes.toString().padStart(2, '0');
-    const secStr = seconds.toString().padStart(2, '0');
 
     return (
-        <div className="flex items-center gap-0.5 text-xs font-mono font-medium tracking-wide text-neutral-600">
-            {/* Hours */}
-            <AnimatedDigit digit={hourStr[0]} />
-            <AnimatedDigit digit={hourStr[1]} />
-            <span className="mx-0.5 animate-pulse">:</span>
-            {/* Minutes */}
-            <AnimatedDigit digit={minStr[0]} />
-            <AnimatedDigit digit={minStr[1]} />
-            <span className="mx-0.5 animate-pulse">:</span>
-            {/* Seconds */}
-            <AnimatedDigit digit={secStr[0]} />
-            <AnimatedDigit digit={secStr[1]} />
-            {/* AM/PM */}
-            <span className="ml-1 text-neutral-400">{ampm}</span>
-        </div>
+        <span className="text-xs font-mono font-medium tracking-wide text-neutral-600">
+            {hourStr}:{minStr} <span className="text-neutral-400">{ampm}</span>
+        </span>
     );
 };
 
@@ -79,11 +42,11 @@ export default function Header() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Update time every second
+    // Update time every minute
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
-        }, 1000);
+        }, 60000);
         return () => clearInterval(timer);
     }, []);
 
@@ -152,6 +115,21 @@ export default function Header() {
                                 <TextShimmer className='text-sm uppercase tracking-widest' duration={1}>Ask AI</TextShimmer>
                                 <Sparkles className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 transition-colors" />
                             </motion.button>
+
+                            {/* Resume Download */}
+                            <motion.a
+                                href="/ashish.pdf"
+                                download
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="hidden md:flex items-center gap-1.5 px-4 py-1.5 bg-neutral-950 border border-neutral-950 rounded-full text-[11px] font-bold uppercase tracking-widest text-white hover:bg-neutral-700 hover:border-neutral-700 transition-all duration-300"
+                                aria-label="Download resume"
+                            >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Resume
+                            </motion.a>
 
                             {/* Menu Trigger at the top */}
                             <motion.button
@@ -288,6 +266,12 @@ export default function Header() {
                                 <a href="https://linkedin.com/in/ashish-makes" target="_blank" rel="noopener noreferrer" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">LinkedIn</a>
                                 <a href="https://github.com/ashish-makes" target="_blank" rel="noopener noreferrer" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">GitHub</a>
                                 <a href="https://x.com/ashish_makes" target="_blank" rel="noopener noreferrer" className="text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">X</a>
+                                <a href="/ashish.pdf" download className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-widest text-neutral-400 hover:text-white transition-colors">
+                                    Resume
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                     </motion.div>

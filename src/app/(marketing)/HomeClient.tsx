@@ -29,11 +29,13 @@ const WorkCard = ({ caseStudy, index }: { caseStudy: CaseStudy; index: number })
                         poster={getOptimizedUrl(caseStudy.imageUrl, { width: 1280 }) || undefined}
                     />
                 ) : caseStudy.imageUrl ? (
-                    <img
+                    <Image
                         src={getOptimizedUrl(caseStudy.imageUrl, { width: 1280 })}
                         alt={caseStudy.title}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        fill
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         loading={index < 2 ? "eager" : "lazy"}
+                        sizes="(max-width: 768px) 85vw, (max-width: 1024px) 45vw, 40vw"
                     />
 
                 ) : (
@@ -85,7 +87,7 @@ const HorizontalWork = ({ caseStudies }: { caseStudies: CaseStudy[] }) => {
     const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-76%" : "-60%"]);
 
     return (
-        <section id="work" ref={targetRef} data-scroll-section className="relative h-[400vh] bg-white">
+        <section id="work" ref={targetRef} className="relative h-[400vh] bg-white">
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                 {/* Header */}
                 <div className="absolute top-24 left-0 w-full px-6 md:px-12 lg:px-24">
@@ -108,6 +110,25 @@ const HorizontalWork = ({ caseStudies }: { caseStudies: CaseStudy[] }) => {
         </section >
     );
 };
+
+const ResumeDownloadButton = () => (
+    <motion.a
+        href="/ashish.pdf"
+        download
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.0, duration: 0.4 }}
+        whileHover={{ scale: 1.1, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+        className="relative flex items-center justify-center w-9 h-9 rounded-full bg-neutral-50 border border-neutral-100 text-neutral-500 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors duration-300"
+        title="Download Resume"
+        aria-label="Download resume PDF"
+    >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+    </motion.a>
+);
 
 const EmailCopyButton = () => {
     const [copied, setCopied] = React.useState(false);
@@ -256,7 +277,7 @@ const Experience = () => {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: false, amount: 0.1, margin: "-5% 0px -5% 0px" }}
+                    viewport={{ once: true, amount: 0.1, margin: "-5% 0px -5% 0px" }}
                     className="md:w-2/3 flex flex-col"
                 >
                     <Accordion type="single" className="w-full">
@@ -393,7 +414,7 @@ const DigitalToolbox = () => {
                                 initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                                viewport={{ once: false, margin: "-5% 0px" }}
+                                viewport={{ once: true, margin: "-5% 0px" }}
                                 className="flex items-center gap-3 mb-8"
                             >
                                 <span className="text-[10px] font-mono text-neutral-300">0{i + 1}</span>
@@ -412,7 +433,7 @@ const DigitalToolbox = () => {
                                             delay: (i * 0.1) + (j * 0.04),
                                             ease: [0.215, 0.61, 0.355, 1]
                                         }}
-                                        viewport={{ once: false, margin: "-5% 0px" }}
+                                        viewport={{ once: true, margin: "-5% 0px" }}
                                         whileHover={{
                                             scale: 1.05,
                                             backgroundColor: "#000",
@@ -425,6 +446,9 @@ const DigitalToolbox = () => {
                                         <img
                                             src={tool.icon}
                                             alt={tool.name}
+                                            loading="lazy"
+                                            width={20}
+                                            height={20}
                                             className="w-4 h-4 md:w-5 md:h-5 object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
                                             onError={(e) => {
                                                 (e.target as HTMLImageElement).style.display = 'none';
@@ -645,6 +669,8 @@ export default function HomeClient({ caseStudies }: { caseStudies: CaseStudy[] }
                             ))}
                             {/* Email Copy Button */}
                             <EmailCopyButton />
+                            {/* Resume Download */}
+                            <ResumeDownloadButton />
                         </div>
 
                         {/* Scroll Button */}

@@ -29,16 +29,14 @@ const GalleryGrid = ({ images }: GalleryGridProps) => {
     const itemVariants: Variants = {
         hidden: {
             opacity: 0,
-            filter: "blur(20px)",
-            y: 40
+            y: 20
         },
         visible: (i: number) => ({
             opacity: 1,
-            filter: "blur(0px)",
             y: 0,
             transition: {
-                duration: 1,
-                delay: (i % 3) * 0.1,
+                duration: 0.5,
+                delay: (i % 3) * 0.08,
                 ease: [0.16, 1, 0.3, 1]
             }
         })
@@ -53,15 +51,16 @@ const GalleryGrid = ({ images }: GalleryGridProps) => {
                     variants={itemVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: false, amount: 0.1, margin: "-10% 0px" }}
+                    viewport={{ once: true, amount: 0.1, margin: "-10% 0px" }}
                     className="break-inside-avoid"
                 >
                     <div className="relative overflow-hidden bg-neutral-100 rounded-none">
                         <img
-                            src={getOptimizedUrl(image.url)}
+                            src={getOptimizedUrl(image.url, { width: 800 })}
                             alt={image.name}
                             className="w-full h-auto object-cover block"
                             loading="lazy"
+                            decoding="async"
                         />
                     </div>
                 </motion.div>

@@ -6,7 +6,7 @@ import Footer from '@/components/main/Footer';
 import { TextAnimate } from '@/components/ui/text-animate';
 import JsonLd from '@/components/seo/JsonLd';
 
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
     title: "Checklist",

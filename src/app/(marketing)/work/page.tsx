@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { getOptimizedUrl } from '@/lib/cloudinary';
 
 
-export const revalidate = 0;
+export const revalidate = 3600;
 
 const iconMap: Record<string, string> = {
     'Next.js': 'https://svgl.app/library/nextjs_icon_dark.svg',
